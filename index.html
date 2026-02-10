@@ -3,59 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>FLASH USDT | OFFICIAL</title>
+    <title>FLASH USDT OFFICIAL</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root { --accent: #00e5ff; --bg: #010409; --card-bg: #0d1117; --border: rgba(0, 229, 255, 0.15); --text-dim: #8b949e; }
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { margin: 0; font-family: 'Plus Jakarta Sans', sans-serif; background-color: var(--bg); color: #fff; line-height: 1.4; font-size: 14px; }
-        .nav-header { width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 12px 15px; border-bottom: 1px solid var(--border); }
-        .logo { font-weight: 800; font-size: 0.9rem; display: flex; align-items: center; gap: 6px; }
-        #hero-page { padding: 20px 15px; text-align: center; min-height: 80vh; display: flex; flex-direction: column; justify-content: center; }
-        .badge-new { background: rgba(0, 229, 255, 0.1); color: var(--accent); padding: 4px 10px; border-radius: 50px; font-size: 0.65rem; font-weight: 600; border: 1px solid var(--border); margin-bottom: 12px; display: inline-block; }
-        h1 { font-size: 1.8rem; font-weight: 800; margin: 5px 0; }
-        h1 span { color: var(--accent); }
-        .btn-main { background: var(--accent); color: #000; padding: 12px 24px; border-radius: 10px; font-weight: 700; font-size: 0.85rem; border: none; cursor: pointer; width: 100%; max-width: 240px; }
+        :root { --accent: #00e5ff; --bg: #010409; --card: #0d1117; --border: rgba(0, 229, 255, 0.15); }
+        body { margin: 0; font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: #fff; text-align: center; }
+        .hero { padding: 50px 20px; }
+        .btn-main { background: var(--accent); color: #000; padding: 15px 30px; border-radius: 12px; font-weight: 800; border: none; cursor: pointer; width: 100%; max-width: 280px; }
         .btn-main:disabled { background: #333; color: #777; cursor: not-allowed; }
-        .modal-ui { position: fixed; inset: 0; background: rgba(0,0,0,0.95); display: none; justify-content: center; align-items: center; z-index: 1000; padding: 15px; }
-        .selection-card { background: var(--card-bg); border: 1px solid var(--border); padding: 20px; border-radius: 16px; width: 100%; max-width: 340px; }
-        .cards-container { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
-        .p-card { background: var(--card-bg); border: 1px solid var(--border); padding: 15px; border-radius: 12px; text-align: center; position: relative; }
-        .sold-out-badge { position: absolute; top: 5px; right: 5px; background: red; font-size: 0.6rem; padding: 2px 5px; border-radius: 4px; font-weight: 800; }
-        .addr-display { background: #000; padding: 10px; border-radius: 8px; font-family: monospace; font-size: 0.7rem; color: var(--accent); border: 1px solid #333; margin: 15px 0; word-break: break-all; }
-        input { width: 100%; padding: 10px; border-radius: 8px; background: #000; border: 1px solid #333; color: #fff; margin-bottom: 8px; }
+        .pricing-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 15px; }
+        .p-card { background: var(--card); border: 1px solid var(--border); padding: 15px; border-radius: 15px; position: relative; }
+        .sold-badge { position: absolute; top: 5px; right: 5px; background: red; font-size: 0.6rem; padding: 2px 5px; border-radius: 4px; }
+        .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.95); display: none; justify-content: center; align-items: center; z-index: 1000; padding: 20px; }
+        .pay-box { background: var(--card); border: 1px solid var(--border); padding: 20px; border-radius: 20px; width: 100%; max-width: 350px; }
     </style>
 </head>
 <body>
 
-<header class="nav-header">
-    <div class="logo"><i class="fas fa-bolt"></i> FLASH<span>ASSETS</span></div>
-    <div style="font-size: 0.75rem;"><i class="fab fa-telegram"></i> Support</div>
-</header>
-
-<div id="hero-page">
-    <span class="badge-new">v3.0 Lightning Protocol</span>
-    <h1>Instant <span>Flash USDT</span></h1>
-    <p style="color:var(--text-dim); font-size:0.85rem;">Premium crypto assets. 10-min delivery.</p>
-    <button class="btn-main" onclick="openSelection()">Get Started</button>
+<div id="hero-page" class="hero">
+    <h1 style="font-size: 2rem;">Flash <span>USDT</span> Assets</h1>
+    <p style="color:#8b949e;">Instant verified delivery in 10 minutes.</p>
+    <button class="btn-main" onclick="openNet()">BUY FLASH NOW</button>
 </div>
 
-<div id="selection-overlay" class="modal-ui">
-    <div class="selection-card">
-        <h3 style="margin:0 0 15px;">Select Network</h3>
-        <button class="btn-main" style="margin-bottom:10px;" onclick="loadRates('TRC20')">TRON (TRC20)</button>
-        <button class="btn-main" onclick="loadRates('BEP20')">BSC (BEP20)</button>
-        <p onclick="closeUI('selection-overlay')" style="color:red; margin-top:15px; cursor:pointer; font-size:0.8rem;">Cancel</p>
+<div id="selection" class="modal">
+    <div class="pay-box">
+        <h3>Select Network</h3>
+        <button class="btn-main" style="margin-bottom:10px;" onclick="loadRates('TRC20')">TRC20 (Tron)</button>
+        <button class="btn-main" onclick="loadRates('BEP20')">BEP20 (BSC)</button>
     </div>
 </div>
 
-<div id="main-content" style="display:none; padding:15px;">
-    <div style="display:flex; justify-content:space-between; align-items:center;">
-        <button onclick="location.reload()" style="background:none; border:none; color:var(--accent);"><i class="fas fa-arrow-left"></i> Back</button>
-        <div id="active-net" style="color:var(--accent); font-weight:800;"></div>
-    </div>
-    <div id="pricing-list" class="cards-container"></div>
+<div id="main-content" style="display:none;">
+    <h2 id="net-title" style="color:var(--accent);"></h2>
+    <div id="pricing-list" class="pricing-grid"></div>
 </div>
 
 <script type="module">
@@ -74,44 +56,34 @@
     const db = getDatabase(app);
     let liveData = {};
 
-    // Fetch Rates from Firebase
-    onValue(ref(db, 'settings'), (snapshot) => {
-        liveData = snapshot.val();
-    });
+    onValue(ref(db, 'settings'), (snap) => { liveData = snap.val(); });
 
-    window.loadRates = function(net) {
+    window.openNet = () => document.getElementById('selection').style.display = 'flex';
+    
+    window.loadRates = (net) => {
+        document.getElementById('selection').style.display = 'none';
         document.getElementById('hero-page').style.display = 'none';
-        document.getElementById('selection-overlay').style.display = 'none';
         document.getElementById('main-content').style.display = 'block';
-        document.getElementById('active-net').innerText = net;
+        document.getElementById('net-title').innerText = net + " Packages";
         
         const list = document.getElementById('pricing-list');
         list.innerHTML = "";
+        const rates = liveData[net + "_rates"];
         
-        const netRates = liveData[net + "_rates"];
-        netRates.forEach((item, index) => {
-            const isSold = item.status === "sold";
+        rates.forEach(item => {
+            const isSold = item.status === 'sold';
             list.innerHTML += `
                 <div class="p-card">
-                    ${isSold ? '<span class="sold-out-badge">SOLD</span>' : ''}
-                    <div style="font-weight:800; font-size:1.1rem;">$${item.pack}</div>
-                    <div style="color:var(--accent); font-size:0.8rem; margin:5px 0;">Cost: $${item.price}</div>
-                    <button class="btn-main" style="padding:8px; font-size:0.7rem;" 
-                        ${isSold ? 'disabled' : `onclick="openPay('${item.price}', '${net}')"`}>
-                        ${isSold ? 'Out of Stock' : 'Buy Now'}
+                    ${isSold ? '<span class="sold-badge">SOLD OUT</span>' : ''}
+                    <div style="font-weight:800;">$${item.pack}</div>
+                    <div style="color:var(--accent); font-size:0.8rem;">Cost: $${item.price}</div>
+                    <button class="btn-main" style="padding:8px; font-size:0.7rem; margin-top:10px;" 
+                        ${isSold ? 'disabled' : `onclick="alert('Send $${item.price} to: ' + (liveData.${net.toLowerCase()}_address))"`}>
+                        ${isSold ? 'Sold' : 'Buy'}
                     </button>
                 </div>`;
         });
     }
-
-    window.openPay = function(amt, net) {
-        const addr = (net === 'TRC20') ? liveData.trc20_address : liveData.bep20_address;
-        alert(`Send Exactly $${amt} USDT to:\n\n${addr}\n\n(Network: ${net})`);
-        // Yahan aap apna purana Payment Modal wala HTML/Logic bhi jod sakte hain
-    }
-    
-    window.openSelection = () => document.getElementById('selection-overlay').style.display = 'flex';
-    window.closeUI = (id) => document.getElementById(id).style.display = 'none';
 </script>
 </body>
 </html>
