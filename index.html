@@ -7,17 +7,19 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        /* Maine aapka wahi CSS use kiya hai jo aapne file mein diya tha */
+        /* Aapka Original Design CSS */
         :root { --main-color: #00d2ff; --bg-color: #05080f; --card-bg: rgba(22, 27, 40, 0.7); --success: #00ff88; --danger: #ff4d4d; --btn-border: #00d2ff; }
         body { margin: 0; font-family: 'Inter', sans-serif; background: var(--bg-color); color: #fff; text-align: center; overflow-x: hidden; }
         #hero-page { min-height: 100vh; background: radial-gradient(circle at top, #081a24 0%, #05080f 100%); display: flex; flex-direction: column; align-items: center; padding: 15px; box-sizing: border-box; }
         .main-title { font-size: 1.5rem; font-weight: 800; line-height: 1.2; margin-bottom: 15px; }
         .outline-btn { background: transparent; border: 2px solid var(--btn-border); color: var(--main-color); width: 100%; padding: 15px; border-radius: 12px; font-weight: bold; margin-bottom: 15px; cursor: pointer; display: block; text-decoration: none; }
-        #selection-overlay, .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-color); z-index: 9999; flex-direction: column; align-items: center; padding: 20px; box-sizing: border-box; }
+        #selection-overlay, .modal { display: none; position: fixed; inset: 0; background: var(--bg-color); z-index: 9999; flex-direction: column; align-items: center; padding: 20px; overflow-y: auto; }
         .pricing-grid { display: grid; grid-template-columns: 1fr; gap: 15px; width: 100%; max-width: 400px; }
         .card { background: var(--card-bg); border-radius: 15px; padding: 20px; border: 1px solid rgba(0,210,255,0.2); }
-        .buy-btn { background: var(--main-color); color: #000; padding: 12px; border: none; width: 100%; border-radius: 10px; font-weight: bold; }
+        .buy-btn { background: var(--main-color); color: #000; padding: 12px; border: none; width: 100%; border-radius: 10px; font-weight: bold; cursor: pointer; }
         input { width: 100%; padding: 12px; margin: 8px 0; border-radius: 10px; border: 1px solid #333; background: #161b22; color: white; }
+        .qr-container { background: #fff; padding: 10px; border-radius: 12px; width: 140px; height: 140px; margin: 0 auto 15px; }
+        .qr-container img { width: 100%; height: 100%; }
     </style>
 </head>
 <body>
@@ -34,23 +36,34 @@
 </div>
 
 <div id="main-content" style="display:none; padding: 20px;">
-    <h2 id="display-net"></h2>
+    <button onclick="location.reload()" style="background:none; color:#94a3b8; border:1px solid #333; padding:5px 10px; border-radius:5px; margin-bottom:10px;">← Back</button>
+    <h2 id="display-net" style="color:var(--main-color);"></h2>
     <div id="pricing-list" class="pricing-grid"></div>
+</div>
+
+<div class="modal" id="paymentModal">
+    <div style="background:#0d1117; padding:20px; border-radius:20px; width:90%; max-width:400px; border:1px solid #333;">
+        <h3>Deposit USDT</h3>
+        <div class="qr-container"><img id="qrCodeImg" src=""></div>
+        <div id="walletAddr" style="word-break:break-all; color:var(--main-color); margin-bottom:15px; font-size:0.8rem;"></div>
+        <p>Send exactly: <b id="exactAmount" style="color:var(--success)"></b> USDT</p>
+        <button class="buy-btn" onclick="openVerify()">I HAVE SENT PAYMENT</button>
+    </div>
 </div>
 
 <div class="modal" id="verifyModal">
     <div style="background:#0d1117; padding:20px; border-radius:20px; width:90%; max-width:400px;">
         <h3>Verify Payment</h3>
-        <input type="text" id="userName" placeholder="Your Name">
+        <input type="text" id="userName" placeholder="Your Name/Telegram">
         <input type="text" id="txId" placeholder="TXID / Hash">
         <input type="number" id="sentAmount" placeholder="Amount Sent">
-        <button class="buy-btn" onclick="submitOrder()">SUBMIT ORDER</button>
+        <button class="buy-btn" id="submitBtn" onclick="submitOrder()">SUBMIT ORDER</button>
     </div>
 </div>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getDatabase, ref, onValue, push, set } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+    import { getDatabase, ref, onValue, push } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyDyYaMZ0hFAACsXx-qol2LLsPfDjcM6PGU",
@@ -63,6 +76,9 @@
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
     let currentNet = "";
+    let wallets = {};
+
+    onValue(ref(db, 'settings/wallets'), (snap) => { wallets = snap.val() || {}; });
 
     window.openDisclaimer = () => { document.getElementById("hero-page").style.display="none"; document.getElementById("selection-overlay").style.display="flex"; };
 
@@ -72,30 +88,41 @@
         document.getElementById("main-content").style.display="block";
         document.getElementById("display-net").innerText = net;
 
-        onValue(ref(db, 'settings/' + net + '_rates'), (snap) => {
+        onValue(ref(db, `settings/${net}_rates`), (snap) => {
             const list = document.getElementById("pricing-list");
             list.innerHTML = "";
             snap.forEach(child => {
                 const item = child.val();
-                list.innerHTML += `<div class="card"><h3>$${item.pack} Flash</h3><h2 style="color:#00ff88">$${item.price}</h2><button class="buy-btn" onclick="openVerify()">BUY NOW</button></div>`;
+                list.innerHTML += `
+                <div class="card">
+                    <small style="color:#8b949e;">${child.key.toUpperCase()}</small>
+                    <h3>$${item.pack} Flash</h3>
+                    <h2 style="color:var(--success)">$${item.price}</h2>
+                    <button class="buy-btn" onclick="openPay('${item.price}')">BUY NOW</button>
+                </div>`;
             });
         });
     };
 
-    window.openVerify = () => { document.getElementById("verifyModal").style.display="flex"; };
+    window.openPay = (price) => {
+        const addr = wallets[currentNet.toLowerCase() + "_address"] || "Update in Admin";
+        document.getElementById("walletAddr").innerText = addr;
+        document.getElementById("exactAmount").innerText = price;
+        document.getElementById("qrCodeImg").src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${addr}`;
+        document.getElementById("paymentModal").style.display = "flex";
+    };
+
+    window.openVerify = () => { document.getElementById("paymentModal").style.display="none"; document.getElementById("verifyModal").style.display="flex"; };
 
     window.submitOrder = () => {
-        const orderData = {
+        const data = {
             name: document.getElementById("userName").value,
             txid: document.getElementById("txId").value,
             amount: document.getElementById("sentAmount").value,
             network: currentNet,
             time: new Date().toLocaleString()
         };
-        push(ref(db, 'orders'), orderData).then(() => {
-            alert("Order Submitted! Verifying...");
-            location.reload();
-        });
+        push(ref(db, 'orders'), data).then(() => { alert("Order Submitted! Please wait 10-15 mins."); location.reload(); });
     };
 </script>
 </body>
