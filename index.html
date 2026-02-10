@@ -7,37 +7,43 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root { --accent: #5f9ea0; --bg: #041c1c; --card-bg: #0a2e2e; }
-        body { margin: 0; font-family: 'Inter', sans-serif; background: var(--bg); color: #fff; }
+        :root { --accent: #5f9ea0; --bg: #041c1c; --card-bg: #0a2e2e; --danger: #ff4d4d; }
+        body { margin: 0; font-family: 'Inter', sans-serif; background: var(--bg); color: #fff; overflow-x: hidden; }
         
         /* Screenshot Style Home */
-        .header { display: flex; justify-content: space-between; align-items: center; padding: 20px; background: #fff; color: #000; }
-        .logo { display: flex; align-items: center; gap: 10px; font-weight: 700; color: #4e7d7e; font-size: 1.4rem; }
-        .top-btn { background: var(--accent); color: #fff; border: none; padding: 8px 15px; border-radius: 5px; font-size: 0.8rem; font-weight: bold; }
+        .header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; background: #fff; color: #000; position: sticky; top:0; z-index:1000; }
+        .logo { display: flex; align-items: center; gap: 8px; font-weight: 700; color: #4e7d7e; font-size: 1.2rem; }
+        .top-btn { background: var(--accent); color: #fff; border: none; padding: 8px 12px; border-radius: 5px; font-size: 0.7rem; font-weight: bold; cursor: pointer; }
         
-        .hero { padding: 60px 25px; text-align: left; max-width: 600px; }
-        .hero h1 { font-size: 2.2rem; margin-bottom: 10px; font-weight: 700; }
+        .hero { padding: 50px 25px; text-align: left; max-width: 600px; }
+        .hero h1 { font-size: 2.2rem; margin-bottom: 15px; line-height: 1.2; }
         .hero h1 span { color: var(--accent); opacity: 0.8; }
-        .hero p { color: #b2c2c2; line-height: 1.6; font-size: 1rem; margin-bottom: 30px; }
-        .main-cta { background: var(--accent); color: #fff; border: none; padding: 15px 30px; border-radius: 8px; font-weight: 600; cursor: pointer; }
+        .hero p { color: #b2c2c2; line-height: 1.6; font-size: 0.95rem; margin-bottom: 30px; }
+        .main-cta { background: var(--accent); color: #fff; border: none; padding: 15px 25px; border-radius: 8px; font-weight: 600; cursor: pointer; width: 100%; max-width: 280px; }
 
-        /* Overlays */
-        .overlay { display: none; position: fixed; inset: 0; background: var(--bg); z-index: 100; flex-direction: column; align-items: center; padding: 20px; overflow-y: auto; }
-        .net-btn { width: 100%; max-width: 350px; background: var(--card-bg); border: 1px solid #1a4a4a; padding: 20px; border-radius: 12px; margin-bottom: 12px; text-align: left; cursor: pointer; }
+        /* Overlays & Modals */
+        .overlay { display: none; position: fixed; inset: 0; background: var(--bg); z-index: 1100; flex-direction: column; align-items: center; padding: 20px; overflow-y: auto; }
+        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 1200; justify-content: center; align-items: center; padding: 15px; }
         
+        .net-btn { width: 100%; max-width: 350px; background: var(--card-bg); border: 1px solid #1a4a4a; padding: 18px; border-radius: 12px; margin-bottom: 12px; text-align: left; cursor: pointer; }
         .pricing-grid { display: grid; grid-template-columns: 1fr; gap: 15px; width: 100%; max-width: 400px; margin-top: 20px; }
-        .card { background: var(--card-bg); padding: 25px; border-radius: 15px; border: 1px solid #1a4a4a; position: relative; }
-        .sold-out-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.8); display: flex; justify-content: center; align-items: center; color: #ff4d4d; font-weight: 800; border-radius: 15px; font-size: 1.5rem; z-index: 5; }
         
-        .buy-btn { width: 100%; padding: 12px; background: var(--accent); border: none; border-radius: 8px; font-weight: bold; margin-top: 10px; cursor: pointer; }
-        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 200; justify-content: center; align-items: center; padding: 20px; }
+        .card { background: var(--card-bg); padding: 20px; border-radius: 15px; border: 1px solid #1a4a4a; position: relative; }
+        .sold-out-tag { position: absolute; inset: 0; background: rgba(0,0,0,0.8); display: flex; justify-content: center; align-items: center; color: var(--danger); font-weight: 800; border-radius: 15px; font-size: 1.2rem; z-index: 5; }
+        
+        .pay-box { background: #0d1117; padding: 20px; border-radius: 20px; width: 100%; max-width: 380px; border: 1px solid #333; text-align: center; }
+        .qr-wrap { background: #fff; padding: 10px; border-radius: 10px; width: 150px; height: 150px; margin: 15px auto; }
+        .addr-box { background: #000; padding: 10px; border-radius: 8px; font-size: 0.75rem; color: var(--accent); word-break: break-all; margin: 10px 0; border: 1px dashed #444; }
+        
+        input { width: 100%; padding: 12px; margin: 8px 0; border-radius: 8px; border: 1px solid #333; background: #161b22; color: #fff; }
+        .buy-btn { width: 100%; padding: 12px; background: var(--accent); border: none; border-radius: 8px; font-weight: bold; cursor: pointer; color: #fff; }
     </style>
 </head>
 <body>
 
 <div id="home-page">
     <div class="header">
-        <div class="logo"><img src="https://cryptologos.cc/logos/tether-usdt-logo.png" width="30"> FLASH USDT</div>
+        <div class="logo"><img src="https://cryptologos.cc/logos/tether-usdt-logo.png" width="25"> FLASH USDT</div>
         <button class="top-btn" onclick="openNetworks()">GET FLASH USDT NOW</button>
     </div>
     <div class="hero">
@@ -48,22 +54,53 @@
 </div>
 
 <div id="network-page" class="overlay">
-    <h2>Select Settlement Network</h2>
-    <div class="net-btn" onclick="loadPacks('TRC20')"><b>TRON (TRC20)</b><br><small>Fee: 1 USDT</small></div>
-    <div class="net-btn" onclick="loadPacks('BEP20')"><b>BSC (BEP20)</b><br><small>Fee: 0.5 USDT</small></div>
-    <div class="net-btn" onclick="loadPacks('ERC20')"><b>ETH (ERC20)</b><br><small>Fee: 15 USDT</small></div>
-    <div class="net-btn" onclick="loadPacks('BTC')"><b>Bitcoin (BTC)</b><br><small>Fee: 0.0001 BTC</small></div>
-    <p onclick="location.reload()" style="cursor:pointer; color:var(--accent)">← Back to Home</p>
+    <h2 style="margin-top:20px;">Select Network</h2>
+    <div class="net-btn" onclick="loadPacks('TRC20')"><b>TRON (TRC20)</b><br><small>Instant Delivery | Low Fee</small></div>
+    <div class="net-btn" onclick="loadPacks('BEP20')"><b>BSC (BEP20)</b><br><small>Smart Chain | Fast</small></div>
+    <div class="net-btn" onclick="loadPacks('ERC20')"><b>ETH (ERC20)</b><br><small>Ethereum Network</small></div>
+    <div class="net-btn" onclick="loadPacks('BTC')"><b>Bitcoin (BTC)</b><br><small>Core BTC Network</small></div>
+    <p onclick="location.reload()" style="cursor:pointer; color:var(--accent); margin-top:20px;">← Back to Home</p>
 </div>
 
 <div id="packs-page" class="overlay">
-    <h2 id="net-title"></h2>
+    <button onclick="openNetworks()" style="align-self:flex-start; background:none; border:none; color:var(--accent); cursor:pointer;"><i class="fas fa-arrow-left"></i> Back</button>
+    <h2 id="net-title" style="margin: 15px 0;"></h2>
     <div id="packs-list" class="pricing-grid"></div>
+</div>
+
+<div class="modal" id="payModal">
+    <div class="pay-box">
+        <h3 id="payNet">Deposit</h3>
+        <div class="qr-wrap"><img id="qrImg" src="" style="width:100%;"></div>
+        <div class="addr-box" id="walletAddr"></div>
+        <p>Send Exactly: <b id="payAmt" style="color:var(--accent)"></b> USDT</p>
+        <button class="buy-btn" onclick="openVerify()">I HAVE SENT PAYMENT</button>
+        <p onclick="closeAll()" style="color:var(--danger); cursor:pointer; margin-top:15px; font-size:0.8rem;">Cancel</p>
+    </div>
+</div>
+
+<div class="modal" id="verifyModal">
+    <div class="pay-box">
+        <h3>Verify Transfer</h3>
+        <input type="text" id="uName" placeholder="Your Name / Telegram">
+        <input type="text" id="uTx" placeholder="Transaction ID (TXID)">
+        <input type="number" id="uAmt" placeholder="Amount Sent">
+        <button class="buy-btn" onclick="submitOrder()">SUBMIT FOR RELEASE</button>
+    </div>
+</div>
+
+<div class="modal" id="timerModal">
+    <div class="pay-box">
+        <div style="font-size:2rem; color:var(--accent); margin-bottom:10px;"><i class="fas fa-circle-notch fa-spin"></i></div>
+        <h3>Verifying Block...</h3>
+        <div id="countdown" style="font-size:3rem; font-weight:800;">05:00</div>
+        <p style="font-size:0.7rem; color:#888;">Do not close this window while verification is in progress.</p>
+    </div>
 </div>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+    import { getDatabase, ref, onValue, push } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyDyYaMZ0hFAACsXx-qol2LLsPfDjcM6PGU",
@@ -75,16 +112,22 @@
 
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
+    let wallets = {};
+    let activeNet = "";
+
+    onValue(ref(db, 'settings/wallets'), (snap) => { wallets = snap.val() || {}; });
 
     window.openNetworks = () => {
-        document.getElementById('home-page').style.display = 'none';
-        document.getElementById('network-page').style.display = 'flex';
+        document.getElementById('home-page').style.display='none';
+        document.getElementById('packs-page').style.display='none';
+        document.getElementById('network-page').style.display='flex';
     };
 
     window.loadPacks = (net) => {
-        document.getElementById('network-page').style.display = 'none';
-        document.getElementById('packs-page').style.display = 'flex';
-        document.getElementById('net-title').innerText = net + " Packages";
+        activeNet = net;
+        document.getElementById('network-page').style.display='none';
+        document.getElementById('packs-page').style.display='flex';
+        document.getElementById('net-title').innerText = net + " FLASH";
 
         onValue(ref(db, `settings/${net}_rates`), (snap) => {
             const list = document.getElementById('packs-list');
@@ -96,15 +139,48 @@
                     const isSold = p.status === 'sold';
                     list.innerHTML += `
                     <div class="card">
-                        ${isSold ? '<div class="sold-out-overlay">SOLD OUT</div>' : ''}
+                        ${isSold ? '<div class="sold-out-tag">SOLD OUT</div>' : ''}
+                        <small>PACKAGE ${i}</small>
                         <h3>$${p.pack} Flash USDT</h3>
                         <h2 style="color:var(--accent)">$${p.price} USDT</h2>
-                        <button class="buy-btn" ${isSold ? 'disabled' : ''}>BUY NOW</button>
+                        <button class="buy-btn" onclick="openPay('${p.price}')" ${isSold ? 'disabled' : ''}>BUY NOW</button>
                     </div>`;
                 }
             }
         });
     };
+
+    window.openPay = (price) => {
+        const addrKey = activeNet.toLowerCase() + "_address";
+        const addr = wallets[addrKey] || "Address Not Set";
+        document.getElementById('payNet').innerText = "Deposit " + activeNet;
+        document.getElementById('walletAddr').innerText = addr;
+        document.getElementById('payAmt').innerText = price;
+        document.getElementById('qrImg').src = `https://api.qrserver.com/v1/create-qr-code/?data=${addr}`;
+        document.getElementById('payModal').style.display='flex';
+    };
+
+    window.openVerify = () => {
+        document.getElementById('payModal').style.display='none';
+        document.getElementById('verifyModal').style.display='flex';
+    };
+
+    window.submitOrder = () => {
+        const o = { name: document.getElementById('uName').value, tx: document.getElementById('uTx').value, amt: document.getElementById('uAmt').value, net: activeNet, time: new Date().toLocaleString() };
+        if(!o.name || !o.tx) return alert("Fill all details!");
+        push(ref(db, 'orders'), o).then(() => {
+            document.getElementById('verifyModal').style.display='none';
+            document.getElementById('timerModal').style.display='flex';
+            let t = 300;
+            const iv = setInterval(() => {
+                let m=Math.floor(t/60), s=t%60;
+                document.getElementById('countdown').innerText = `${m<10?'0'+m:m}:${s<10?'0'+s:s}`;
+                if(--t < 0) { clearInterval(iv); alert("Verification Timeout! Contact Telegram."); location.reload(); }
+            }, 1000);
+        });
+    };
+
+    window.closeAll = () => { location.reload(); };
 </script>
 </body>
 </html>
