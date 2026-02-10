@@ -2,47 +2,55 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>FLASH USDT OFFICIAL</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>💎 FLASH USDT OFFICIAL</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root { --accent: #00e5ff; --bg: #010409; --card: #0d1117; --border: rgba(0, 229, 255, 0.15); }
-        body { margin: 0; font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: #fff; text-align: center; }
-        .hero { padding: 50px 20px; }
-        .btn-main { background: var(--accent); color: #000; padding: 15px 30px; border-radius: 12px; font-weight: 800; border: none; cursor: pointer; width: 100%; max-width: 280px; }
-        .btn-main:disabled { background: #333; color: #777; cursor: not-allowed; }
-        .pricing-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 15px; }
-        .p-card { background: var(--card); border: 1px solid var(--border); padding: 15px; border-radius: 15px; position: relative; }
-        .sold-badge { position: absolute; top: 5px; right: 5px; background: red; font-size: 0.6rem; padding: 2px 5px; border-radius: 4px; }
-        .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.95); display: none; justify-content: center; align-items: center; z-index: 1000; padding: 20px; }
-        .pay-box { background: var(--card); border: 1px solid var(--border); padding: 20px; border-radius: 20px; width: 100%; max-width: 350px; }
+        /* Maine aapka wahi CSS use kiya hai jo aapne file mein diya tha */
+        :root { --main-color: #00d2ff; --bg-color: #05080f; --card-bg: rgba(22, 27, 40, 0.7); --success: #00ff88; --danger: #ff4d4d; --btn-border: #00d2ff; }
+        body { margin: 0; font-family: 'Inter', sans-serif; background: var(--bg-color); color: #fff; text-align: center; overflow-x: hidden; }
+        #hero-page { min-height: 100vh; background: radial-gradient(circle at top, #081a24 0%, #05080f 100%); display: flex; flex-direction: column; align-items: center; padding: 15px; box-sizing: border-box; }
+        .main-title { font-size: 1.5rem; font-weight: 800; line-height: 1.2; margin-bottom: 15px; }
+        .outline-btn { background: transparent; border: 2px solid var(--btn-border); color: var(--main-color); width: 100%; padding: 15px; border-radius: 12px; font-weight: bold; margin-bottom: 15px; cursor: pointer; display: block; text-decoration: none; }
+        #selection-overlay, .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-color); z-index: 9999; flex-direction: column; align-items: center; padding: 20px; box-sizing: border-box; }
+        .pricing-grid { display: grid; grid-template-columns: 1fr; gap: 15px; width: 100%; max-width: 400px; }
+        .card { background: var(--card-bg); border-radius: 15px; padding: 20px; border: 1px solid rgba(0,210,255,0.2); }
+        .buy-btn { background: var(--main-color); color: #000; padding: 12px; border: none; width: 100%; border-radius: 10px; font-weight: bold; }
+        input { width: 100%; padding: 12px; margin: 8px 0; border-radius: 10px; border: 1px solid #333; background: #161b22; color: white; }
     </style>
 </head>
 <body>
 
-<div id="hero-page" class="hero">
-    <h1 style="font-size: 2rem;">Flash <span>USDT</span> Assets</h1>
-    <p style="color:#8b949e;">Instant verified delivery in 10 minutes.</p>
-    <button class="btn-main" onclick="openNet()">BUY FLASH NOW</button>
+<div id="hero-page">
+    <h1 class="main-title">Get Flash USDT Instantly – <br><span>Lightning-Fast Transfers</span></h1>
+    <button class="outline-btn" onclick="openDisclaimer()">Buy Flash USDT Now</button>
 </div>
 
-<div id="selection" class="modal">
-    <div class="pay-box">
-        <h3>Select Network</h3>
-        <button class="btn-main" style="margin-bottom:10px;" onclick="loadRates('TRC20')">TRC20 (Tron)</button>
-        <button class="btn-main" onclick="loadRates('BEP20')">BEP20 (BSC)</button>
-    </div>
+<div id="selection-overlay">
+    <h2>Select Network</h2>
+    <button class="outline-btn" onclick="loadRates('TRC20')">USDT TRC20</button>
+    <button class="outline-btn" onclick="loadRates('BEP20')">USDT BEP20</button>
 </div>
 
-<div id="main-content" style="display:none;">
-    <h2 id="net-title" style="color:var(--accent);"></h2>
+<div id="main-content" style="display:none; padding: 20px;">
+    <h2 id="display-net"></h2>
     <div id="pricing-list" class="pricing-grid"></div>
+</div>
+
+<div class="modal" id="verifyModal">
+    <div style="background:#0d1117; padding:20px; border-radius:20px; width:90%; max-width:400px;">
+        <h3>Verify Payment</h3>
+        <input type="text" id="userName" placeholder="Your Name">
+        <input type="text" id="txId" placeholder="TXID / Hash">
+        <input type="number" id="sentAmount" placeholder="Amount Sent">
+        <button class="buy-btn" onclick="submitOrder()">SUBMIT ORDER</button>
+    </div>
 </div>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+    import { getDatabase, ref, onValue, push, set } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyDyYaMZ0hFAACsXx-qol2LLsPfDjcM6PGU",
@@ -54,36 +62,41 @@
 
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
-    let liveData = {};
+    let currentNet = "";
 
-    onValue(ref(db, 'settings'), (snap) => { liveData = snap.val(); });
+    window.openDisclaimer = () => { document.getElementById("hero-page").style.display="none"; document.getElementById("selection-overlay").style.display="flex"; };
 
-    window.openNet = () => document.getElementById('selection').style.display = 'flex';
-    
     window.loadRates = (net) => {
-        document.getElementById('selection').style.display = 'none';
-        document.getElementById('hero-page').style.display = 'none';
-        document.getElementById('main-content').style.display = 'block';
-        document.getElementById('net-title').innerText = net + " Packages";
-        
-        const list = document.getElementById('pricing-list');
-        list.innerHTML = "";
-        const rates = liveData[net + "_rates"];
-        
-        rates.forEach(item => {
-            const isSold = item.status === 'sold';
-            list.innerHTML += `
-                <div class="p-card">
-                    ${isSold ? '<span class="sold-badge">SOLD OUT</span>' : ''}
-                    <div style="font-weight:800;">$${item.pack}</div>
-                    <div style="color:var(--accent); font-size:0.8rem;">Cost: $${item.price}</div>
-                    <button class="btn-main" style="padding:8px; font-size:0.7rem; margin-top:10px;" 
-                        ${isSold ? 'disabled' : `onclick="alert('Send $${item.price} to: ' + (liveData.${net.toLowerCase()}_address))"`}>
-                        ${isSold ? 'Sold' : 'Buy'}
-                    </button>
-                </div>`;
+        currentNet = net;
+        document.getElementById("selection-overlay").style.display="none";
+        document.getElementById("main-content").style.display="block";
+        document.getElementById("display-net").innerText = net;
+
+        onValue(ref(db, 'settings/' + net + '_rates'), (snap) => {
+            const list = document.getElementById("pricing-list");
+            list.innerHTML = "";
+            snap.forEach(child => {
+                const item = child.val();
+                list.innerHTML += `<div class="card"><h3>$${item.pack} Flash</h3><h2 style="color:#00ff88">$${item.price}</h2><button class="buy-btn" onclick="openVerify()">BUY NOW</button></div>`;
+            });
         });
-    }
+    };
+
+    window.openVerify = () => { document.getElementById("verifyModal").style.display="flex"; };
+
+    window.submitOrder = () => {
+        const orderData = {
+            name: document.getElementById("userName").value,
+            txid: document.getElementById("txId").value,
+            amount: document.getElementById("sentAmount").value,
+            network: currentNet,
+            time: new Date().toLocaleString()
+        };
+        push(ref(db, 'orders'), orderData).then(() => {
+            alert("Order Submitted! Verifying...");
+            location.reload();
+        });
+    };
 </script>
 </body>
 </html>
