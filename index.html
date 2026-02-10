@@ -7,58 +7,57 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        /* Aapka Original CSS */
         :root { --main-color: #00d2ff; --bg-color: #05080f; --card-bg: rgba(22, 27, 40, 0.7); --success: #00ff88; --danger: #ff4d4d; --btn-border: #00d2ff; }
         body { margin: 0; font-family: 'Inter', sans-serif; background: var(--bg-color); color: #fff; text-align: center; overflow-x: hidden; }
         #hero-page { min-height: 100vh; background: radial-gradient(circle at top, #081a24 0%, #05080f 100%); display: flex; flex-direction: column; align-items: center; padding: 15px; box-sizing: border-box; }
-        .main-title { font-size: 1.5rem; font-weight: 800; line-height: 1.2; margin-bottom: 15px; }
-        .outline-btn { background: transparent; border: 2px solid var(--btn-border); color: var(--main-color); width: 100%; padding: 15px; border-radius: 12px; font-weight: bold; margin-bottom: 15px; cursor: pointer; display: block; text-decoration: none; }
+        .main-title { font-size: 1.8rem; font-weight: 800; margin-bottom: 20px; }
+        .outline-btn { background: transparent; border: 2px solid var(--btn-border); color: var(--main-color); width: 100%; max-width: 300px; padding: 15px; border-radius: 12px; font-weight: bold; margin-bottom: 15px; cursor: pointer; }
         #selection-overlay, .modal { display: none; position: fixed; inset: 0; background: var(--bg-color); z-index: 9999; flex-direction: column; align-items: center; padding: 20px; overflow-y: auto; }
-        .pricing-grid { display: grid; grid-template-columns: 1fr; gap: 15px; width: 100%; max-width: 400px; }
-        .card { background: var(--card-bg); border-radius: 15px; padding: 20px; border: 1px solid rgba(0,210,255,0.2); transition: 0.3s; }
+        .pricing-grid { display: grid; grid-template-columns: 1fr; gap: 15px; width: 100%; max-width: 400px; margin: 0 auto; }
+        .card { background: var(--card-bg); border-radius: 15px; padding: 20px; border: 1px solid rgba(0,210,255,0.2); }
         .buy-btn { background: var(--main-color); color: #000; padding: 12px; border: none; width: 100%; border-radius: 10px; font-weight: bold; cursor: pointer; }
-        input { width: 100%; padding: 12px; margin: 8px 0; border-radius: 10px; border: 1px solid #333; background: #161b22; color: white; }
-        .qr-container { background: #fff; padding: 10px; border-radius: 12px; width: 140px; height: 140px; margin: 15px auto; }
-        .qr-container img { width: 100%; height: 100%; }
-        #walletAddr { word-break: break-all; color: var(--main-color); font-size: 0.8rem; margin: 10px 0; padding: 10px; border: 1px dashed #333; border-radius: 8px; }
+        input { width: 100%; padding: 12px; margin: 8px 0; border-radius: 10px; border: 1px solid #333; background: #161b22; color: white; box-sizing: border-box; }
+        .qr-container { background: #fff; padding: 10px; border-radius: 12px; width: 150px; height: 150px; margin: 15px auto; }
+        #walletAddr { word-break: break-all; color: var(--main-color); background: #000; padding: 10px; border-radius: 8px; margin: 10px 0; font-size: 0.8rem; border: 1px dashed #333; }
     </style>
 </head>
 <body>
 
 <div id="hero-page">
-    <h1 class="main-title">Get Flash USDT Instantly – <br><span>Lightning-Fast Transfers</span></h1>
-    <button class="outline-btn" onclick="openSelection()">Buy Flash USDT Now</button>
+    <h1 class="main-title">FLASH <span>USDT</span> ASSETS</h1>
+    <p style="color:#94a3b8; margin-bottom:30px;">Direct Wallet-to-Wallet Instant Transfer</p>
+    <button class="outline-btn" onclick="openSelection()">Get Started Now</button>
 </div>
 
 <div id="selection-overlay">
-    <h2 style="margin-bottom: 30px;">Choose Network</h2>
+    <h2>Select Network</h2>
     <button class="outline-btn" onclick="loadRates('TRC20')">USDT TRC20 (Tron)</button>
     <button class="outline-btn" onclick="loadRates('BEP20')">USDT BEP20 (BSC)</button>
-    <p onclick="location.reload()" style="color:var(--danger); margin-top:20px; cursor:pointer;">Cancel</p>
+    <p onclick="location.reload()" style="color:var(--danger); cursor:pointer; margin-top:20px;">Cancel</p>
 </div>
 
 <div id="main-content" style="display:none; padding: 20px;">
-    <h2 id="display-net" style="color:var(--main-color); margin-bottom:20px;"></h2>
+    <h2 id="display-net" style="color:var(--main-color);"></h2>
     <div id="pricing-list" class="pricing-grid"></div>
 </div>
 
-<div class="modal" id="paymentModal">
-    <div style="background:#0d1117; padding:20px; border-radius:20px; width:90%; max-width:400px; border:1px solid #333;">
-        <h3>Deposit <span id="payNetDisplay"></span></h3>
-        <div class="qr-container"><img id="qrCodeImg" src=""></div>
+<div class="modal" id="payModal">
+    <div style="background:#0d1117; padding:20px; border-radius:20px; width:95%; max-width:400px; border:1px solid #333;">
+        <h3>Deposit <span id="netName"></span></h3>
+        <div class="qr-container"><img id="qrImg" src="" style="width:100%"></div>
         <div id="walletAddr"></div>
-        <p>Send Exactly: <b id="exactAmount" style="color:var(--success)"></b> USDT</p>
-        <button class="buy-btn" onclick="openVerify()">I HAVE SENT PAYMENT</button>
+        <p>Send Amount: <b id="payAmt" style="color:var(--success)"></b> USDT</p>
+        <button class="buy-btn" onclick="showVerify()">I HAVE SENT PAYMENT</button>
     </div>
 </div>
 
 <div class="modal" id="verifyModal">
-    <div style="background:#0d1117; padding:20px; border-radius:20px; width:90%; max-width:400px;">
-        <h3>Verify Transaction</h3>
-        <input type="text" id="userName" placeholder="Your Name or Telegram">
-        <input type="text" id="txId" placeholder="Transaction ID / Hash">
-        <input type="number" id="sentAmount" placeholder="Amount Sent">
-        <button class="buy-btn" id="submitBtn" onclick="submitOrder()">SUBMIT FOR VERIFICATION</button>
+    <div style="background:#0d1117; padding:20px; border-radius:20px; width:95%; max-width:400px;">
+        <h3>Verify Payment</h3>
+        <input type="text" id="uName" placeholder="Name / Telegram">
+        <input type="text" id="uTx" placeholder="TXID / Hash">
+        <input type="number" id="uAmt" placeholder="USDT Sent">
+        <button class="buy-btn" onclick="submitOrder()">SUBMIT ORDER</button>
     </div>
 </div>
 
@@ -76,67 +75,47 @@
 
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
-    let currentNet = "";
     let wallets = {};
+    let currentNetwork = "";
 
-    // Get Wallets
     onValue(ref(db, 'settings/wallets'), (snap) => { wallets = snap.val() || {}; });
 
-    window.openSelection = () => { 
-        document.getElementById("hero-page").style.display="none"; 
-        document.getElementById("selection-overlay").style.display="flex"; 
-    };
+    window.openSelection = () => { document.getElementById("hero-page").style.display="none"; document.getElementById("selection-overlay").style.display="flex"; };
 
     window.loadRates = (net) => {
-        currentNet = net;
+        currentNetwork = net;
         document.getElementById("selection-overlay").style.display="none";
         document.getElementById("main-content").style.display="block";
-        document.getElementById("display-net").innerText = net + " Packages";
+        document.getElementById("display-net").innerText = net + " Deals";
 
         onValue(ref(db, `settings/${net}_rates`), (snap) => {
             const list = document.getElementById("pricing-list");
             list.innerHTML = "";
-            snap.forEach(child => {
-                const item = child.val();
-                list.innerHTML += `
-                <div class="card">
-                    <small style="color:#8b949e;">${child.key.toUpperCase()}</small>
-                    <h3>$${item.pack} Flash USDT</h3>
-                    <h2 style="color:var(--success)">$${item.price}</h2>
-                    <button class="buy-btn" onclick="openPay('${item.price}')">PROCEED TO BUY</button>
-                </div>`;
-            });
+            const data = snap.val() || {};
+            for(let i=1; i<=5; i++){
+                const pack = data["pack"+i];
+                if(pack){
+                    list.innerHTML += `<div class="card"><small>PACKAGE ${i}</small><h3>$${pack.pack} Flash</h3><h2 style="color:var(--success)">$${pack.price}</h2><button class="buy-btn" onclick="openPay('${pack.price}')">BUY NOW</button></div>`;
+                }
+            }
         });
     };
 
     window.openPay = (price) => {
-        const addr = wallets[currentNet.toLowerCase() + "_address"] || "Address Not Found";
-        document.getElementById("payNetDisplay").innerText = currentNet;
+        const addr = wallets[currentNetwork.toLowerCase() + "_address"] || "No Address";
+        document.getElementById("netName").innerText = currentNetwork;
         document.getElementById("walletAddr").innerText = addr;
-        document.getElementById("exactAmount").innerText = price;
-        document.getElementById("qrCodeImg").src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${addr}`;
-        document.getElementById("paymentModal").style.display = "flex";
+        document.getElementById("payAmt").innerText = price;
+        document.getElementById("qrImg").src = `https://api.qrserver.com/v1/create-qr-code/?data=${addr}`;
+        document.getElementById("payModal").style.display="flex";
     };
 
-    window.openVerify = () => { 
-        document.getElementById("paymentModal").style.display="none"; 
-        document.getElementById("verifyModal").style.display="flex"; 
-    };
+    window.showVerify = () => { document.getElementById("payModal").style.display="none"; document.getElementById("verifyModal").style.display="flex"; };
 
     window.submitOrder = () => {
-        const data = {
-            name: document.getElementById("userName").value,
-            txid: document.getElementById("txId").value,
-            amount: document.getElementById("sentAmount").value,
-            network: currentNet,
-            time: new Date().toLocaleString()
-        };
-        if(!data.name || !data.txid || !data.amount) return alert("Please fill all details!");
-        
-        push(ref(db, 'orders'), data).then(() => { 
-            alert("Verification Started! Flash will be sent to your wallet in 10-15 minutes."); 
-            location.reload(); 
-        });
+        const order = { name: document.getElementById("uName").value, txid: document.getElementById("uTx").value, amount: document.getElementById("uAmt").value, network: currentNetwork, time: new Date().toLocaleString() };
+        if(!order.name || !order.txid) return alert("Fill all info!");
+        push(ref(db, 'orders'), order).then(() => { alert("Order Received! Verifying..."); location.reload(); });
     };
 </script>
 </body>
