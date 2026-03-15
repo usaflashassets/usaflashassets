@@ -3,112 +3,194 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rocco Trader - Links</title>
+    <title>Trader Waqas - Official Links</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --primary-bg: #050505;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --accent-blue: #0088cc;
+            --accent-green: #25D366;
+            --text-main: #ffffff;
+            --text-dim: #a0a0a0;
+        }
+
         body {
             margin: 0;
             padding: 0;
-            font-family: 'Segoe UI', Tahoma, sans-serif;
-            background: linear-gradient(135deg, #5ee7df 0%, #b490ca 100%);
+            font-family: 'Inter', sans-serif;
+            background-color: var(--primary-bg);
+            background-image: 
+                radial-gradient(circle at top right, rgba(0, 136, 204, 0.15), transparent 300px),
+                radial-gradient(circle at bottom left, rgba(37, 211, 102, 0.05), transparent 300px);
+            color: var(--text-main);
             display: flex;
             justify-content: center;
             min-height: 100vh;
-            padding-top: 40px;
+            padding: 40px 20px;
         }
 
         .container {
-            width: 90%;
+            width: 100%;
             max-width: 400px;
             text-align: center;
+            animation: slideUp 0.6s ease-out;
         }
 
-        .profile-img {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            border: 3px solid white;
-            margin-bottom: 10px;
-            background: #eee;
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        h2 { color: white; margin-bottom: 25px; font-weight: bold; }
-
-        .link-card {
-            background: white;
-            border-radius: 15px;
-            padding: 10px 15px;
-            margin-bottom: 12px;
+        .brand-name {
+            font-size: 26px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            margin-bottom: 20px;
             display: flex;
             align-items: center;
-            text-decoration: none;
-            color: #333;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            justify-content: center;
+            gap: 10px;
+            text-transform: uppercase;
         }
 
-        .icon-box {
-            width: 45px;
-            height: 45px;
-            border-radius: 10px;
+        .verified-badge {
+            color: var(--accent-blue);
+            font-size: 20px;
+        }
+
+        .bio-card {
+            font-size: 14px;
+            color: var(--text-dim);
+            margin-bottom: 30px;
+            line-height: 1.6;
+            background: var(--card-bg);
+            padding: 22px;
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(12px);
+        }
+
+        .bio-card b {
+            color: #fff;
+            display: block;
+            margin-bottom: 6px;
+            font-size: 15px;
+        }
+
+        .link-item {
+            display: flex;
+            align-items: center;
+            background: var(--card-bg);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 16px;
+            margin-bottom: 14px;
+            border-radius: 18px;
+            text-decoration: none;
+            color: white;
+            transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+
+        .link-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: scale(1.03);
+            border-color: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+        }
+
+        .icon-circle {
+            width: 46px;
+            height: 46px;
+            border-radius: 12px;
             display: flex;
             justify-content: center;
             align-items: center;
             margin-right: 15px;
-            overflow: hidden;
+            font-size: 20px;
+            flex-shrink: 0;
         }
 
-        .whatsapp-bg { background-color: #25D366; color: white; }
-        
-        .quotex-img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
+        .tg-bg { background: linear-gradient(135deg, #0088cc, #005580); }
+        .wa-bg { background: linear-gradient(135deg, #25D366, #128C7E); }
+
+        .text-area {
+            text-align: left;
         }
 
-        .link-text { flex-grow: 1; text-align: left; font-weight: 600; font-size: 16px; }
-        .dots { color: #ccc; }
+        .main-text {
+            display: block;
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        .sub-text {
+            font-size: 11px;
+            color: var(--text-dim);
+            font-weight: 400;
+        }
+
+        .arrow-icon {
+            margin-left: auto;
+            color: rgba(255, 255, 255, 0.2);
+            font-size: 12px;
+        }
+
+        footer {
+            margin-top: 40px;
+            font-size: 10px;
+            color: #444;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+        }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <div style="display:inline-block; position:relative;">
-        <img src="https://via.placeholder.com/100" class="profile-img">
+    <h1 class="brand-name">Trader Waqas <i class="fas fa-check-circle verified-badge"></i></h1>
+    
+    <div class="bio-card">
+        <b>OFFICIAL TRADING HUB</b>
+        🚀 10+ Daily SureShot Binary Signals <br>
+        💸 Mere sath trade karne ke liye link par click karein <br>
+        🔥 Start Your Profit Journey Today
     </div>
-    <h2>Rocco_Trader</h2>
 
-    <a href="https://wa.me/923000000000" class="link-card">
-        <div class="icon-box whatsapp-bg">
-            <i class="fab fa-whatsapp fa-2x"></i>
+    <a href="tg://resolve?domain=traderwaqas08" class="link-item">
+        <div class="icon-circle tg-bg">
+            <i class="fab fa-telegram-plane"></i>
         </div>
-        <div class="link-text">WhatsApp Number</div>
-        <div class="dots"><i class="fas fa-ellipsis-v"></i></div>
+        <div class="text-area">
+            <span class="main-text">Join Free Channel</span>
+            <span class="sub-text">Direct App Open (No VPN Required)</span>
+        </div>
+        <i class="fas fa-chevron-right arrow-icon"></i>
     </a>
 
-    <a href="#" class="link-card">
-        <div class="icon-box whatsapp-bg">
-            <i class="fas fa-users fa-lg"></i>
+    <a href="tg://resolve?domain=traderwaqas8" class="link-item">
+        <div class="icon-circle tg-bg">
+            <i class="fas fa-user-shield"></i>
         </div>
-        <div class="link-text">WhatsApp Group</div>
-        <div class="dots"><i class="fas fa-ellipsis-v"></i></div>
+        <div class="text-area">
+            <span class="main-text">Telegram Personal ID</span>
+            <span class="sub-text">For VIP Access & Fast Support</span>
+        </div>
+        <i class="fas fa-chevron-right arrow-icon"></i>
     </a>
 
-    <a href="#" class="link-card">
-        <div class="icon-box whatsapp-bg">
-            <i class="fab fa-whatsapp fa-2x"></i>
+    <a href="https://wa.me/923248441073" class="link-item">
+        <div class="icon-circle wa-bg">
+            <i class="fab fa-whatsapp"></i>
         </div>
-        <div class="link-text">WhatsApp Channel</div>
-        <div class="dots"><i class="fas fa-ellipsis-v"></i></div>
+        <div class="text-area">
+            <span class="main-text">WhatsApp Contact</span>
+            <span class="sub-text">Direct Chat: 0324 8441073</span>
+        </div>
+        <i class="fas fa-chevron-right arrow-icon"></i>
     </a>
 
-    <a href="#" class="link-card">
-        <div class="icon-box">
-            <img class="quotex-img" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAYAAADDPmHLAAAACXBIWXMAAAsTAAALEwEAmpwYAAADJ0lEQVR4nO3bS2sVQRSA4XNfSeK9uS9EfC9u3Ym4E3En+AsiditYdaVLFy5ciLhS8S8IulGnCxeu3Ym40Y0v3pS8SZyYmYvBRS7SNDU906equp8DIdScmS9V1YkhZ86ePXv27NmzZ8+ePXv27NmzZ8+ePXv27NmzZ8+ePXv27NmzZ8+ePXv27NmzZ8+ePXv27NmzZ8+ePXv27NmzZ8+ePXv27NmzZ8+ePXv27NmzZ8+ePXv27NmzZ8+ePXv27NmzZ8+ePXv27NmzZ8+ePXv27NmzZ8+ePXv27NmzZ8+ePXv27NmzZ8+ePXv27NmzZ8+ePXv27NmzZ8+ePXv27NmzZ8+ePXv27NmzZ8+ePXv27NmzZ8+ePXv27NmzZ8+ePXv27NmzZ8+ePXv27NmzZ8+ePXv27NmzZ8+ePXv27NmzZ8+ePXv27NmzZ8+ePXv27NmzZ8+ePXv27NmzZ8+ePXv27NmzZ8+ePXv27NmzZ8+ePXv27NmzZ8+ePXv27NmzZ8+ePXv27NmzZ8+ePXv27NmzZ8+ePXv27NmzZ8+ePXv27NmzZ8+ePXv27NmzZ8+ePXv27NmzZ8+ePXv27NmzZ8+ePXv27NmzZ8+ePXv27NmzZ8+ePXv27NmzZ8+ePXv27NmzZ8+ePXv27NmzZ8+ePXv27NmzZ8+ePXv27NmzZ8+ePXv27NmzZ8+ePXv27NmzZ8+ePXv27NmzZ8+ePXv27NmzZ8+ePXv27NmzZ8+ePXv27NmzZ8+ePXv27NmzZ8+ePXv27NmzZ8+ePXv27NmzZ8+ePXv27NmzZ8+ePXv27NmzZ8+ePXv27NmzZ8+ePXv27NmzZ8+ePXv27NmzZ8+ePXv27NmzZ8+ePXv27NmzZ8+ePXv27NmzZ8+ePXv27NmzZ8+ePXv27NmzZ8+ePXv27NmzZ8+ePXv27NmzZ8+ePXv27NmzZ8+ePXv27NmzZ8+ePXv27NmzZ8+ePXv27NmzZ8+ePXv27NmzZ8+ePXv27NmzZ8+ePXv27NmzZ8+ePXv27NmzZ8+ePXv27NmzZ8+ePXv27Nmv5h9A4P8A+yvA4wAAAABJRU5ErkJggg==" alt="Q">
-        </div>
-        <div class="link-text">Quotex Registration Link</div>
-        <div class="dots"><i class="fas fa-ellipsis-v"></i></div>
-    </a>
-
+    <footer>Verified Official Profile</footer>
 </div>
 
 </body>
