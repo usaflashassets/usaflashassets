@@ -19,6 +19,8 @@
         .pending { background: rgba(234, 179, 8, 0.1); color: #eab308; }
         .success { background: rgba(34, 197, 94, 0.1); color: #22c55e; }
         .failed { background: rgba(239, 68, 68, 0.1); color: #ef4444; }
+        .dep-option { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); padding: 20px; border-radius: 20px; cursor: pointer; transition: 0.3s; }
+        .dep-option:hover { background: rgba(234, 179, 8, 0.1); border-color: #eab308; }
     </style>
 </head>
 <body>
@@ -61,22 +63,39 @@
 
     <div id="depM" class="modal">
         <div class="glass p-8 rounded-[40px] w-full max-w-sm">
-            <div id="d1">
-                <h2 class="text-sm font-black text-center mb-6 uppercase italic">Amount</h2>
-                <input type="number" id="dAmount" placeholder="Amount (PKR)" class="auth-input mb-6 text-center">
+            <div id="d0" class="space-y-4">
+                <h2 class="text-sm font-black text-center mb-6 uppercase italic">Select Method</h2>
+                <div onclick="selectMethod('crypto')" class="dep-option text-center">
+                    <p class="text-white font-bold">Deposit Crypto</p>
+                    <p class="text-[10px] text-gray-500">USDT (BEP20)</p>
+                </div>
+                <div onclick="selectMethod('pkr')" class="dep-option text-center">
+                    <p class="text-white font-bold">Deposit PKR</p>
+                    <p class="text-[10px] text-gray-500">Local Bank / Wallets</p>
+                </div>
+            </div>
+
+            <div id="d1" class="hidden">
+                <h2 id="depTitle" class="text-sm font-black text-center mb-6 uppercase italic">Amount</h2>
+                <input type="number" id="dAmount" oninput="calcUsd()" placeholder="Enter Amount" class="auth-input mb-2 text-center">
+                <p id="usdConvert" class="text-center text-[10px] text-yellow-500 font-bold mb-6 hidden"></p>
                 <button onclick="toStep(2)" class="w-full py-4 bg-yellow-500 text-black font-black rounded-2xl uppercase text-xs">Next</button>
             </div>
+
             <div id="d2" class="hidden text-center">
-                <p class="text-[10px] font-black text-yellow-500 mb-4 uppercase">Dubai Live Trade Merchant</p>
-                <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=DubaiLiveTrade" class="mx-auto mb-6 rounded-2xl">
+                <p id="merchantName" class="text-[10px] font-black text-yellow-500 mb-4 uppercase">Dubai Live Trade Merchant</p>
+                <img id="depQR" src="" class="mx-auto mb-4 rounded-2xl w-48 h-48">
+                <p id="cryptoAddr" class="text-[9px] text-gray-400 break-all mb-6 px-4 hidden">0x76ecfe8a3bd89297189e16cdcd275d743fb71a62</p>
                 <button onclick="toStep(3)" class="w-full py-4 bg-yellow-500 text-black font-black rounded-2xl uppercase text-xs">I Have Paid</button>
             </div>
+
             <div id="d3" class="hidden space-y-4">
-                <input type="text" id="dName" placeholder="Account Name" class="auth-input">
-                <input type="number" id="dSent" placeholder="Sent Amount" class="auth-input">
-                <input type="text" id="dTxid" placeholder="TXID" class="auth-input">
+                <input type="text" id="dName" placeholder="Account Name / Sender Name" class="auth-input">
+                <input type="number" id="dSent" placeholder="Exact Amount Sent" class="auth-input">
+                <input type="text" id="dTxid" placeholder="Transaction ID (TXID)" class="auth-input">
                 <button onclick="submitDep()" class="w-full py-4 bg-green-500 text-black font-black rounded-2xl uppercase text-xs">Submit</button>
             </div>
+            
             <button onclick="hideM('depM')" class="w-full mt-6 text-[10px] font-bold text-gray-600 uppercase text-center">Close</button>
         </div>
     </div>
@@ -118,6 +137,8 @@
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth(), db = firebase.firestore();
 
+        let currentDepMethod = '';
+
         auth.onAuthStateChanged(user => {
             if(user) {
                 document.getElementById('authSec').classList.add('hidden');
@@ -140,8 +161,52 @@
 
         function showM(id) { document.getElementById(id).style.display = 'flex'; }
         function hideM(id) { document.getElementById(id).style.display = 'none'; }
-        function openDep() { showM('depM'); toStep(1); }
-        function toStep(s) { ['d1','d2','d3'].forEach(d => document.getElementById(d).classList.add('hidden')); document.getElementById('d'+s).classList.remove('hidden'); }
+        
+        // Deposit Logic
+        function openDep() { 
+            showM('depM'); 
+            toStep(0); 
+            document.getElementById('dAmount').value = '';
+            document.getElementById('usdConvert').classList.add('hidden');
+        }
+
+        function selectMethod(m) {
+            currentDepMethod = m;
+            const title = document.getElementById('depTitle');
+            const input = document.getElementById('dAmount');
+            
+            if(m === 'crypto') {
+                title.innerText = "Amount (USD)";
+                input.placeholder = "Enter Dollars";
+                document.getElementById('depQR').src = "https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=0x76ecfe8a3bd89297189e16cdcd275d743fb71a62";
+                document.getElementById('cryptoAddr').classList.remove('hidden');
+            } else {
+                title.innerText = "Amount (PKR)";
+                input.placeholder = "Enter PKR";
+                document.getElementById('depQR').src = "https://i.postimg.cc/HLPQpW92/Screenshot-20260504-033311.jpg";
+                document.getElementById('cryptoAddr').classList.add('hidden');
+            }
+            toStep(1);
+        }
+
+        function calcUsd() {
+            if(currentDepMethod === 'pkr') {
+                const pkr = document.getElementById('dAmount').value;
+                const usd = (pkr / 280).toFixed(2);
+                const disp = document.getElementById('usdConvert');
+                if(pkr > 0) {
+                    disp.innerText = `Approx: $${usd}`;
+                    disp.classList.remove('hidden');
+                } else {
+                    disp.classList.add('hidden');
+                }
+            }
+        }
+
+        function toStep(s) { 
+            ['d0','d1','d2','d3'].forEach(d => document.getElementById(d).classList.add('hidden')); 
+            document.getElementById('d'+s).classList.remove('hidden'); 
+        }
 
         async function submitDep() {
             const amt = document.getElementById('dSent').value, tx = document.getElementById('dTxid').value, name = document.getElementById('dName').value;
@@ -150,6 +215,7 @@
                 uid: auth.currentUser.uid,
                 email: auth.currentUser.email,
                 amount: amt,
+                currency: currentDepMethod === 'crypto' ? 'USD' : 'PKR',
                 accountName: name,
                 txid: tx,
                 status: 'Pending',
@@ -158,6 +224,7 @@
             alert("Submitted!"); hideM('depM');
         }
 
+        // Withdraw Logic
         async function submitWit() {
             const amt = document.getElementById('wAmt').value, bank = document.getElementById('wBank').value, acc = document.getElementById('wAccNum').value, name = document.getElementById('wAccName').value;
             if(!amt || !bank || !acc || !name) return alert("Fill details");
@@ -186,18 +253,18 @@
             const list = document.getElementById('historyList');
             list.innerHTML = '<p class="text-center py-10 text-[10px] text-gray-700">LOADING...</p>';
             
-            // Simple query without orderBy to avoid Indexing issue
             db.collection(coll).where('uid', '==', auth.currentUser.uid).onSnapshot(snap => {
                 let html = '';
                 if(snap.empty) { list.innerHTML = '<p class="text-center py-10 text-gray-700 text-[10px]">NO RECORDS</p>'; return; }
                 
                 let docs = [];
                 snap.forEach(doc => docs.push(doc.data()));
-                docs.sort((a,b) => b.time - a.time); // Manual sorting
+                docs.sort((a,b) => b.time - a.time);
 
                 docs.forEach(d => {
                     const st = d.status || 'Pending';
                     const isDep = coll === 'requests';
+                    const currencyLabel = isDep ? (d.currency || 'Rs.') : 'Rs.';
                     html += `
                     <div class="history-card">
                         <div>
@@ -205,7 +272,7 @@
                             <p class="text-[8px] text-gray-500 font-bold mt-1 uppercase tracking-tighter">${isDep ? d.txid : d.bankName}</p>
                         </div>
                         <div class="text-right">
-                            <p class="text-xs font-black ${isDep ? 'text-green-500' : 'text-red-500'} mb-2">Rs. ${d.amount}</p>
+                            <p class="text-xs font-black ${isDep ? 'text-green-500' : 'text-red-500'} mb-2">${currencyLabel === 'USD' ? '$' : 'Rs.'} ${d.amount}</p>
                             <span class="status-badge ${st.toLowerCase()}">${st}</span>
                         </div>
                     </div>`;
