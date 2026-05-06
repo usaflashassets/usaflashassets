@@ -3,195 +3,175 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trader Waqas - Official Links</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <title>ProTrade | History & Affiliate Portal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
     <style>
-        :root {
-            --primary-bg: #050505;
-            --card-bg: rgba(255, 255, 255, 0.05);
-            --accent-blue: #0088cc;
-            --accent-green: #25D366;
-            --text-main: #ffffff;
-            --text-dim: #a0a0a0;
-        }
-
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: 'Inter', sans-serif;
-            background-color: var(--primary-bg);
-            background-image: 
-                radial-gradient(circle at top right, rgba(0, 136, 204, 0.15), transparent 300px),
-                radial-gradient(circle at bottom left, rgba(37, 211, 102, 0.05), transparent 300px);
-            color: var(--text-main);
-            display: flex;
-            justify-content: center;
-            min-height: 100vh;
-            padding: 40px 20px;
-        }
-
-        .container {
-            width: 100%;
-            max-width: 400px;
-            text-align: center;
-            animation: slideUp 0.6s ease-out;
-        }
-
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .brand-name {
-            font-size: 26px;
-            font-weight: 800;
-            letter-spacing: -0.5px;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            text-transform: uppercase;
-        }
-
-        .verified-badge {
-            color: var(--accent-blue);
-            font-size: 20px;
-        }
-
-        .bio-card {
-            font-size: 14px;
-            color: var(--text-dim);
-            margin-bottom: 30px;
-            line-height: 1.6;
-            background: var(--card-bg);
-            padding: 22px;
-            border-radius: 24px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(12px);
-        }
-
-        .bio-card b {
-            color: #fff;
-            display: block;
-            margin-bottom: 6px;
-            font-size: 15px;
-        }
-
-        .link-item {
-            display: flex;
-            align-items: center;
-            background: var(--card-bg);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            padding: 16px;
-            margin-bottom: 14px;
-            border-radius: 18px;
-            text-decoration: none;
-            color: white;
-            transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
-        }
-
-        .link-item:hover {
-            background: rgba(255, 255, 255, 0.1);
-            transform: scale(1.03);
-            border-color: rgba(255, 255, 255, 0.2);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
-        }
-
-        .icon-circle {
-            width: 46px;
-            height: 46px;
-            border-radius: 12px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-right: 15px;
-            font-size: 20px;
-            flex-shrink: 0;
-        }
-
-        .tg-bg { background: linear-gradient(135deg, #0088cc, #005580); }
-        .wa-bg { background: linear-gradient(135deg, #25D366, #128C7E); }
-
-        .text-area {
-            text-align: left;
-        }
-
-        .main-text {
-            display: block;
-            font-weight: 600;
-            font-size: 16px;
-        }
-
-        .sub-text {
-            font-size: 11px;
-            color: var(--text-dim);
-            font-weight: 400;
-        }
-
-        .arrow-icon {
-            margin-left: auto;
-            color: rgba(255, 255, 255, 0.2);
-            font-size: 12px;
-        }
-
-        footer {
-            margin-top: 40px;
-            font-size: 10px;
-            color: #444;
-            text-transform: uppercase;
-            letter-spacing: 4px;
-        }
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
+        body { background: #05070a; color: #e2e8f0; font-family: 'Plus Jakarta Sans', sans-serif; min-height: 100vh; margin: 0; }
+        .glass-card { background: rgba(17, 24, 39, 0.8); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.05); }
+        .auth-input { background: #1a1f29; border: 1px solid #2d3748; padding: 14px; border-radius: 12px; width: 100%; color: white; outline: none; }
+        .tab-btn { padding: 10px 20px; font-weight: 700; font-size: 12px; border-radius: 10px; transition: 0.3s; background: rgba(255,255,255,0.05); }
+        .tab-active { background: #eab308; color: black; }
+        .history-card { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: 15px; padding: 15px; margin-bottom: 10px; }
+        .status-pending { color: #eab308; }
+        .status-success { color: #22c55e; }
+        .status-failed { color: #ef4444; }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h1 class="brand-name">Trader Waqas <i class="fas fa-check-circle verified-badge"></i></h1>
-    
-    <div class="bio-card">
-        <b>OFFICIAL TRADING HUB</b>
-        🚀 10+ Daily SureShot Binary Signals <br>
-        💸 Mere sath trade karne ke liye link par click karein <br>
-        🔥 Start Your Profit Journey Today
+    <div id="authSection" class="flex items-center justify-center min-h-screen p-4">
+        <div class="glass-card w-full max-w-sm p-8 rounded-[32px]">
+            <h1 class="text-2xl font-black text-center mb-2 uppercase italic text-yellow-500">Member Portal</h1>
+            <p class="text-gray-500 text-[10px] text-center mb-8 font-bold uppercase tracking-widest">Login to check your account</p>
+            <input type="email" id="email" placeholder="Email Address" class="auth-input mb-4">
+            <input type="password" id="pass" placeholder="Password" class="auth-input mb-6">
+            <button onclick="login()" class="w-full py-4 bg-yellow-500 text-black font-black rounded-2xl uppercase">Login Now</button>
+        </div>
     </div>
 
-    <a href="tg://resolve?domain=traderwaqas08" class="link-item">
-        <div class="icon-circle tg-bg">
-            <i class="fab fa-telegram-plane"></i>
-        </div>
-        <div class="text-area">
-            <span class="main-text">Join Free Channel</span>
-            <span class="sub-text">Direct App Open (No VPN Required)</span>
-        </div>
-        <i class="fas fa-chevron-right arrow-icon"></i>
-    </a>
+    <div id="dashboard" class="hidden p-4 max-w-lg mx-auto">
+        <header class="flex justify-between items-center mb-6 pt-4">
+            <div>
+                <p class="text-[10px] text-gray-500 font-bold uppercase">Account Balance</p>
+                <h2 id="balanceDisp" class="text-2xl font-black text-white">$0.00</h2>
+                <p id="userEmailDisp" class="text-[10px] text-yellow-500 font-bold italic"></p>
+            </div>
+            <button onclick="logout()" class="bg-red-600/20 text-red-500 border border-red-600/30 px-4 py-2 rounded-xl text-[10px] font-bold uppercase">Logout</button>
+        </header>
 
-    <a href="tg://resolve?domain=traderwaqas8" class="link-item">
-        <div class="icon-circle tg-bg">
-            <i class="fas fa-user-shield"></i>
+        <div class="flex gap-2 mb-6 overflow-x-auto pb-2">
+            <button onclick="showTab('trades')" id="tab-trades" class="tab-btn tab-active">Trades</button>
+            <button onclick="showTab('deposits')" id="tab-deposits" class="tab-btn">Deposits</button>
+            <button onclick="showTab('withdraws')" id="tab-withdraws" class="tab-btn">Withdrawals</button>
         </div>
-        <div class="text-area">
-            <span class="main-text">Telegram Personal ID</span>
-            <span class="sub-text">For VIP Access & Fast Support</span>
-        </div>
-        <i class="fas fa-chevron-right arrow-icon"></i>
-    </a>
 
-    <a href="https://wa.me/923248441073" class="link-item">
-        <div class="icon-circle wa-bg">
-            <i class="fab fa-whatsapp"></i>
-        </div>
-        <div class="text-area">
-            <span class="main-text">WhatsApp Contact</span>
-            <span class="sub-text">Direct Chat: 0324 8441073</span>
-        </div>
-        <i class="fas fa-chevron-right arrow-icon"></i>
-    </a>
+        <div id="contentArea" class="space-y-3">
+            </div>
+    </div>
 
-    <footer>Verified Official Profile</footer>
-</div>
+    <script>
+        // Firebase Config (Aapki main site wala)
+        const firebaseConfig = { 
+            apiKey: "AIzaSyAySRA1YSpTpmC8WjnKmDhnNMHkEmkeP50", 
+            authDomain: "waqas-47f30.firebaseapp.com", 
+            projectId: "waqas-47f30", 
+            storageBucket: "waqas-47f30.appspot.com", 
+            messagingSenderId: "374104279093", 
+            appId: "1:374104279093:web:6e1844b60456c700940364" 
+        };
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth(), db = firebase.firestore();
 
+        auth.onAuthStateChanged(user => {
+            if(user) {
+                document.getElementById('authSection').classList.add('hidden');
+                document.getElementById('dashboard').classList.remove('hidden');
+                document.getElementById('userEmailDisp').innerText = user.email;
+                
+                // Real-time Balance Update
+                db.collection('users').doc(user.uid).onSnapshot(doc => {
+                    if(doc.exists) {
+                        document.getElementById('balanceDisp').innerText = "$" + (doc.data().balance || 0).toFixed(2);
+                    }
+                });
+                showTab('trades');
+            } else {
+                document.getElementById('authSection').classList.remove('hidden');
+                document.getElementById('dashboard').classList.add('hidden');
+            }
+        });
+
+        async function login() {
+            const e = document.getElementById('email').value, p = document.getElementById('pass').value;
+            if(!e || !p) return alert("Fill all fields");
+            try { 
+                await auth.signInWithEmailAndPassword(e, p); 
+            } catch(err) { 
+                alert("Login Failed: " + err.message); 
+            }
+        }
+
+        function logout() { auth.signOut().then(() => location.reload()); }
+
+        async function showTab(type) {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('tab-active'));
+            document.getElementById('tab-'+type).classList.add('tab-active');
+
+            const container = document.getElementById('contentArea');
+            container.innerHTML = '<p class="text-center text-gray-600 py-10 text-xs">Loading records...</p>';
+
+            let html = '';
+            const uid = auth.currentUser.uid;
+
+            try {
+                if(type === 'trades') {
+                    // Note: 'trades' collection honi chahiye data dikhane ke liye
+                    const snap = await db.collection('trades').where('uid', '==', uid).orderBy('time', 'desc').limit(20).get();
+                    if(snap.empty) {
+                        html = '<p class="text-center text-gray-500 text-xs py-10 italic">No trade history found.</p>';
+                    } else {
+                        snap.forEach(doc => {
+                            const data = doc.data();
+                            const isWin = data.result === 'PROFIT';
+                            html += `<div class="history-card flex justify-between items-center border-l-4 ${isWin?'border-l-green-500':'border-l-red-500'}">
+                                <div>
+                                    <p class="font-bold text-sm text-white">${data.asset || 'Trade'}</p>
+                                    <p class="text-[9px] text-gray-500">${new Date(data.time).toLocaleString()}</p>
+                                </div>
+                                <div class="text-right">
+                                    <p class="font-black ${isWin?'text-green-500':'text-red-500'}">${isWin?'+':'-'}$${data.amount}</p>
+                                    <p class="text-[8px] font-bold uppercase text-gray-400">${data.type || 'Binary'}</p>
+                                </div>
+                            </div>`;
+                        });
+                    }
+                } 
+                else if(type === 'deposits') {
+                    const snap = await db.collection('requests').where('uid', '==', uid).orderBy('time', 'desc').get();
+                    if(snap.empty) html = '<p class="text-center text-gray-500 text-xs py-10">No deposit requests.</p>';
+                    snap.forEach(doc => {
+                        const data = doc.data();
+                        const status = data.status || 'Pending';
+                        html += `<div class="history-card flex justify-between items-center">
+                            <div>
+                                <p class="font-bold text-sm text-white">PKR ${data.amount}</p>
+                                <p class="text-[9px] text-gray-500 uppercase">TXID: ${data.txid}</p>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-[10px] font-black uppercase status-${status.toLowerCase()}">${status}</p>
+                                <p class="text-[8px] text-gray-600">${new Date(data.time).toLocaleDateString()}</p>
+                            </div>
+                        </div>`;
+                    });
+                }
+                else if(type === 'withdraws') {
+                    const snap = await db.collection('withdrawals').where('uid', '==', uid).orderBy('time', 'desc').get();
+                    if(snap.empty) html = '<p class="text-center text-gray-500 text-xs py-10">No withdrawal history.</p>';
+                    snap.forEach(doc => {
+                        const data = doc.data();
+                        const status = data.status || 'Pending';
+                        html += `<div class="history-card flex justify-between items-center">
+                            <div>
+                                <p class="font-bold text-sm text-white">PKR ${data.amount}</p>
+                                <p class="text-[9px] text-gray-500">${data.bankName} - ${data.accountNumber}</p>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-[10px] font-black uppercase status-${status.toLowerCase()}">${status}</p>
+                                <p class="text-[8px] text-gray-600">${new Date(data.time).toLocaleDateString()}</p>
+                            </div>
+                        </div>`;
+                    });
+                }
+            } catch (error) {
+                html = `<p class="text-center text-red-500 text-[10px] py-10">Error: Database Index Required.</p>`;
+            }
+
+            container.innerHTML = html;
+        }
+    </script>
 </body>
 </html>
