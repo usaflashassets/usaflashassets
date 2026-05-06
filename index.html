@@ -19,8 +19,8 @@
         .pending { background: rgba(234, 179, 8, 0.1); color: #eab308; }
         .success { background: rgba(34, 197, 94, 0.1); color: #22c55e; }
         .failed { background: rgba(239, 68, 68, 0.1); color: #ef4444; }
-        .dep-option { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); padding: 20px; border-radius: 20px; cursor: pointer; transition: 0.3s; }
-        .dep-option:hover { background: rgba(234, 179, 8, 0.1); border-color: #eab308; }
+        .option-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); padding: 20px; border-radius: 20px; cursor: pointer; transition: 0.3s; margin-bottom: 12px; }
+        .option-card:hover { background: rgba(234, 179, 8, 0.1); border-color: #eab308; }
     </style>
 </head>
 <body>
@@ -45,7 +45,7 @@
             </div>
             <div class="flex gap-2">
                 <button onclick="openDep()" class="bg-white text-black px-4 py-2 rounded-xl text-[10px] font-black uppercase">Deposit</button>
-                <button onclick="showM('witM')" class="bg-red-500 text-white px-4 py-2 rounded-xl text-[10px] font-black uppercase">Withdraw</button>
+                <button onclick="openWit()" class="bg-red-500 text-white px-4 py-2 rounded-xl text-[10px] font-black uppercase">Withdraw</button>
             </div>
         </header>
 
@@ -64,55 +64,78 @@
     <div id="depM" class="modal">
         <div class="glass p-8 rounded-[40px] w-full max-w-sm">
             <div id="d0" class="space-y-4">
-                <h2 class="text-sm font-black text-center mb-6 uppercase italic">Select Method</h2>
-                <div onclick="selectMethod('crypto')" class="dep-option text-center">
+                <h2 class="text-sm font-black text-center mb-6 uppercase italic">Deposit Method</h2>
+                <div onclick="selectDepMethod('crypto')" class="option-card text-center">
                     <p class="text-white font-bold">Deposit Crypto</p>
                     <p class="text-[10px] text-gray-500">USDT (BEP20)</p>
                 </div>
-                <div onclick="selectMethod('pkr')" class="dep-option text-center">
+                <div onclick="selectDepMethod('pkr')" class="option-card text-center">
                     <p class="text-white font-bold">Deposit PKR</p>
                     <p class="text-[10px] text-gray-500">Local Bank / Wallets</p>
                 </div>
             </div>
-
             <div id="d1" class="hidden">
                 <h2 id="depTitle" class="text-sm font-black text-center mb-6 uppercase italic">Amount</h2>
-                <input type="number" id="dAmount" oninput="calcUsd()" placeholder="Enter Amount" class="auth-input mb-2 text-center">
-                <p id="usdConvert" class="text-center text-[10px] text-yellow-500 font-bold mb-6 hidden"></p>
-                <button onclick="toStep(2)" class="w-full py-4 bg-yellow-500 text-black font-black rounded-2xl uppercase text-xs">Next</button>
+                <input type="number" id="dAmount" oninput="calcUsdDep()" placeholder="Enter Amount" class="auth-input mb-2 text-center">
+                <p id="usdConvertDep" class="text-center text-[10px] text-yellow-500 font-bold mb-6 hidden"></p>
+                <button onclick="toStepDep(2)" class="w-full py-4 bg-yellow-500 text-black font-black rounded-2xl uppercase text-xs">Next</button>
             </div>
-
             <div id="d2" class="hidden text-center">
-                <p id="merchantName" class="text-[10px] font-black text-yellow-500 mb-4 uppercase">Dubai Live Trade Merchant</p>
+                <p class="text-[10px] font-black text-yellow-500 mb-4 uppercase">Dubai Live Trade Merchant</p>
                 <img id="depQR" src="" class="mx-auto mb-4 rounded-2xl w-48 h-48">
                 <p id="cryptoAddr" class="text-[9px] text-gray-400 break-all mb-6 px-4 hidden">0x76ecfe8a3bd89297189e16cdcd275d743fb71a62</p>
-                <button onclick="toStep(3)" class="w-full py-4 bg-yellow-500 text-black font-black rounded-2xl uppercase text-xs">I Have Paid</button>
+                <button onclick="toStepDep(3)" class="w-full py-4 bg-yellow-500 text-black font-black rounded-2xl uppercase text-xs">I Have Paid</button>
             </div>
-
             <div id="d3" class="hidden space-y-4">
-                <input type="text" id="dName" placeholder="Account Name / Sender Name" class="auth-input">
+                <input type="text" id="dName" placeholder="Account Name" class="auth-input">
                 <input type="number" id="dSent" placeholder="Exact Amount Sent" class="auth-input">
                 <input type="text" id="dTxid" placeholder="Transaction ID (TXID)" class="auth-input">
                 <button onclick="submitDep()" class="w-full py-4 bg-green-500 text-black font-black rounded-2xl uppercase text-xs">Submit</button>
             </div>
-            
             <button onclick="hideM('depM')" class="w-full mt-6 text-[10px] font-bold text-gray-600 uppercase text-center">Close</button>
         </div>
     </div>
 
     <div id="witM" class="modal">
         <div class="glass p-8 rounded-[40px] w-full max-w-sm">
-            <h2 class="text-sm font-black text-center mb-8 uppercase italic">Withdraw</h2>
-            <div class="space-y-4">
+            <div id="w0">
+                <h2 class="text-sm font-black text-center mb-6 uppercase italic">Withdraw Method</h2>
+                <div onclick="selectWitMethod('crypto')" class="option-card text-center">
+                    <p class="text-white font-bold">Withdraw Crypto</p>
+                    <p class="text-[10px] text-gray-500">USDT / Crypto Wallet</p>
+                </div>
+                <div onclick="selectWitMethod('pkr')" class="option-card text-center">
+                    <p class="text-white font-bold">Withdraw PKR</p>
+                    <p class="text-[10px] text-gray-500">Local Bank / JazzCash</p>
+                </div>
+            </div>
+
+            <div id="wC" class="hidden space-y-4">
+                <h2 class="text-sm font-black text-center mb-4 uppercase italic">Withdraw Crypto</h2>
+                <select id="wcNet" class="auth-input">
+                    <option value="USDT (BEP20)">USDT (BEP20)</option>
+                    <option value="USDT (TRC20)">USDT (TRC20)</option>
+                    <option value="USDT (ERC20)">USDT (ERC20)</option>
+                    <option value="BNB (BEP20)">BNB (BEP20)</option>
+                </select>
+                <input type="text" id="wcWallet" placeholder="Wallet Address" class="auth-input">
+                <input type="number" id="wcAmt" placeholder="Amount ($)" class="auth-input">
+                <button onclick="submitWitCrypto()" class="w-full py-4 bg-white text-black font-black rounded-2xl uppercase text-xs">Submit Withdrawal</button>
+            </div>
+
+            <div id="wP" class="hidden space-y-4">
+                <h2 class="text-sm font-black text-center mb-4 uppercase italic">Withdraw PKR</h2>
                 <select id="wBank" class="auth-input">
-                    <option value="JazzCash">JazzCash</option><option value="EasyPaisa">EasyPaisa</option>
+                    <option value="JazzCash">JazzCash</option>
+                    <option value="EasyPaisa">EasyPaisa</option>
                     <option value="HBL">HBL Bank</option>
                 </select>
                 <input type="text" id="wAccNum" placeholder="Account Number" class="auth-input">
                 <input type="text" id="wAccName" placeholder="Account Name" class="auth-input">
                 <input type="number" id="wAmt" placeholder="Amount (PKR)" class="auth-input">
+                <button onclick="submitWitPkr()" class="w-full py-4 bg-white text-black font-black rounded-2xl uppercase text-xs">Submit Withdrawal</button>
             </div>
-            <button onclick="submitWit()" class="w-full py-4 bg-white text-black font-black rounded-2xl uppercase text-xs mt-8">Submit</button>
+
             <button onclick="hideM('witM')" class="w-full mt-6 text-[10px] font-bold text-gray-600 uppercase text-center">Close</button>
         </div>
     </div>
@@ -161,110 +184,114 @@
 
         function showM(id) { document.getElementById(id).style.display = 'flex'; }
         function hideM(id) { document.getElementById(id).style.display = 'none'; }
-        
-        // Deposit Logic
-        function openDep() { 
-            showM('depM'); 
-            toStep(0); 
-            document.getElementById('dAmount').value = '';
-            document.getElementById('usdConvert').classList.add('hidden');
-        }
 
-        function selectMethod(m) {
+        // DEPOSIT SYSTEM
+        function openDep() { showM('depM'); toStepDep(0); }
+        function toStepDep(s) { ['d0','d1','d2','d3'].forEach(d => document.getElementById(d).classList.add('hidden')); document.getElementById('d'+s).classList.remove('hidden'); }
+        
+        function selectDepMethod(m) {
             currentDepMethod = m;
-            const title = document.getElementById('depTitle');
-            const input = document.getElementById('dAmount');
-            
+            const title = document.getElementById('depTitle'), input = document.getElementById('dAmount');
             if(m === 'crypto') {
-                title.innerText = "Amount (USD)";
-                input.placeholder = "Enter Dollars";
+                title.innerText = "Amount (USD)"; input.placeholder = "Enter Dollars";
                 document.getElementById('depQR').src = "https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=0x76ecfe8a3bd89297189e16cdcd275d743fb71a62";
                 document.getElementById('cryptoAddr').classList.remove('hidden');
             } else {
-                title.innerText = "Amount (PKR)";
-                input.placeholder = "Enter PKR";
+                title.innerText = "Amount (PKR)"; input.placeholder = "Enter PKR";
                 document.getElementById('depQR').src = "https://i.postimg.cc/HLPQpW92/Screenshot-20260504-033311.jpg";
                 document.getElementById('cryptoAddr').classList.add('hidden');
             }
-            toStep(1);
+            toStepDep(1);
         }
 
-        function calcUsd() {
+        function calcUsdDep() {
             if(currentDepMethod === 'pkr') {
                 const pkr = document.getElementById('dAmount').value;
                 const usd = (pkr / 280).toFixed(2);
-                const disp = document.getElementById('usdConvert');
-                if(pkr > 0) {
-                    disp.innerText = `Approx: $${usd}`;
-                    disp.classList.remove('hidden');
-                } else {
-                    disp.classList.add('hidden');
-                }
+                const disp = document.getElementById('usdConvertDep');
+                if(pkr > 0) { disp.innerText = `Approx: $${usd}`; disp.classList.remove('hidden'); } else { disp.classList.add('hidden'); }
             }
-        }
-
-        function toStep(s) { 
-            ['d0','d1','d2','d3'].forEach(d => document.getElementById(d).classList.add('hidden')); 
-            document.getElementById('d'+s).classList.remove('hidden'); 
         }
 
         async function submitDep() {
             const amt = document.getElementById('dSent').value, tx = document.getElementById('dTxid').value, name = document.getElementById('dName').value;
             if(!amt || !tx || !name) return alert("Fill all details");
             await db.collection('requests').add({
-                uid: auth.currentUser.uid,
-                email: auth.currentUser.email,
-                amount: amt,
-                currency: currentDepMethod === 'crypto' ? 'USD' : 'PKR',
-                accountName: name,
-                txid: tx,
-                status: 'Pending',
-                time: Date.now()
+                uid: auth.currentUser.uid, email: auth.currentUser.email,
+                amount: amt, currency: currentDepMethod === 'crypto' ? 'USD' : 'PKR',
+                accountName: name, txid: tx, status: 'Pending', time: Date.now()
             });
             alert("Submitted!"); hideM('depM');
         }
 
-        // Withdraw Logic
-        async function submitWit() {
-            const amt = document.getElementById('wAmt').value, bank = document.getElementById('wBank').value, acc = document.getElementById('wAccNum').value, name = document.getElementById('wAccName').value;
-            if(!amt || !bank || !acc || !name) return alert("Fill details");
-            
+        // WITHDRAW SYSTEM
+        function openWit() { 
+            showM('witM'); 
+            document.getElementById('w0').classList.remove('hidden');
+            document.getElementById('wC').classList.add('hidden');
+            document.getElementById('wP').classList.add('hidden');
+        }
+
+        function selectWitMethod(m) {
+            document.getElementById('w0').classList.add('hidden');
+            if(m === 'crypto') document.getElementById('wC').classList.remove('hidden');
+            else document.getElementById('wP').classList.remove('hidden');
+        }
+
+        async function submitWitCrypto() {
+            const amt = parseFloat(document.getElementById('wcAmt').value);
+            const net = document.getElementById('wcNet').value;
+            const wallet = document.getElementById('wcWallet').value;
+            if(!amt || !wallet) return alert("Fill details");
+
             const userRef = db.collection('users').doc(auth.currentUser.uid);
-            const userDoc = await userRef.get();
-            const balanceInUSD = amt / 280; 
+            const doc = await userRef.get();
+            if(doc.data().balance < amt) return alert("Insufficient Balance");
 
-            if(userDoc.data().balance < balanceInUSD) return alert("Insufficient Balance");
-
-            await userRef.update({ balance: firebase.firestore.FieldValue.increment(-balanceInUSD) });
+            await userRef.update({ balance: firebase.firestore.FieldValue.increment(-amt) });
             await db.collection('withdrawals').add({
-                uid: auth.currentUser.uid,
-                email: auth.currentUser.email,
-                amount: amt,
-                bankName: bank,
-                accountNumber: acc,
-                accountName: name,
-                status: 'Pending',
-                time: Date.now()
+                uid: auth.currentUser.uid, email: auth.currentUser.email,
+                amount: amt, bankName: net, accountNumber: wallet, accountName: "Crypto Wallet",
+                status: 'Pending', time: Date.now(), type: 'Crypto'
             });
             alert("Withdrawal Requested!"); hideM('witM');
         }
 
+        async function submitWitPkr() {
+            const amt = parseFloat(document.getElementById('wAmt').value);
+            const bank = document.getElementById('wBank').value;
+            const acc = document.getElementById('wAccNum').value;
+            const name = document.getElementById('wAccName').value;
+            if(!amt || !bank || !acc || !name) return alert("Fill details");
+
+            const userRef = db.collection('users').doc(auth.currentUser.uid);
+            const doc = await userRef.get();
+            const balUSD = amt / 280;
+            if(doc.data().balance < balUSD) return alert("Insufficient Balance");
+
+            await userRef.update({ balance: firebase.firestore.FieldValue.increment(-balUSD) });
+            await db.collection('withdrawals').add({
+                uid: auth.currentUser.uid, email: auth.currentUser.email,
+                amount: amt, bankName: bank, accountNumber: acc, accountName: name,
+                status: 'Pending', time: Date.now(), type: 'PKR'
+            });
+            alert("Withdrawal Requested!"); hideM('witM');
+        }
+
+        // HISTORY SYSTEM
         async function loadHistory(coll) {
             const list = document.getElementById('historyList');
             list.innerHTML = '<p class="text-center py-10 text-[10px] text-gray-700">LOADING...</p>';
-            
             db.collection(coll).where('uid', '==', auth.currentUser.uid).onSnapshot(snap => {
                 let html = '';
                 if(snap.empty) { list.innerHTML = '<p class="text-center py-10 text-gray-700 text-[10px]">NO RECORDS</p>'; return; }
-                
                 let docs = [];
                 snap.forEach(doc => docs.push(doc.data()));
                 docs.sort((a,b) => b.time - a.time);
-
                 docs.forEach(d => {
                     const st = d.status || 'Pending';
                     const isDep = coll === 'requests';
-                    const currencyLabel = isDep ? (d.currency || 'Rs.') : 'Rs.';
+                    const isUSD = isDep ? (d.currency === 'USD') : (d.type === 'Crypto');
                     html += `
                     <div class="history-card">
                         <div>
@@ -272,7 +299,7 @@
                             <p class="text-[8px] text-gray-500 font-bold mt-1 uppercase tracking-tighter">${isDep ? d.txid : d.bankName}</p>
                         </div>
                         <div class="text-right">
-                            <p class="text-xs font-black ${isDep ? 'text-green-500' : 'text-red-500'} mb-2">${currencyLabel === 'USD' ? '$' : 'Rs.'} ${d.amount}</p>
+                            <p class="text-xs font-black ${isDep ? 'text-green-500' : 'text-red-500'} mb-2">${isUSD ? '$' : 'Rs.'} ${d.amount}</p>
                             <span class="status-badge ${st.toLowerCase()}">${st}</span>
                         </div>
                     </div>`;
