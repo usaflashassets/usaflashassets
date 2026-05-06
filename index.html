@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Member Portal | History</title>
+    <title>Member Portal | ProTrade</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
@@ -12,70 +12,73 @@
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
         body { background: #05070a; color: #e2e8f0; font-family: 'Plus Jakarta Sans', sans-serif; min-height: 100vh; margin: 0; }
         .glass-card { background: rgba(17, 24, 39, 0.8); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.05); }
-        
-        /* Card Styles */
-        .history-card { 
-            background: #111827; 
-            border-radius: 20px; 
-            padding: 20px; 
-            margin-bottom: 15px; 
-            border: 1px solid rgba(255,255,255,0.03);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-        }
-        
-        .btn-deposit { background: #22c55e; color: white; }
-        .btn-withdraw { background: #ef4444; color: white; }
-        
-        .status-badge {
-            padding: 4px 12px;
-            border-radius: 50px;
-            font-size: 10px;
-            font-weight: 800;
-            text-transform: uppercase;
-        }
+        .auth-input { background: #1a1f29; border: 1px solid #2d3748; padding: 14px; border-radius: 12px; width: 100%; color: white; outline: none; font-size: 14px; }
+        .history-card { background: #111827; border-radius: 20px; padding: 18px; margin-bottom: 12px; border: 1px solid rgba(255,255,255,0.03); display: flex; justify-content: space-between; align-items: center; }
+        .status-badge { padding: 4px 10px; border-radius: 50px; font-size: 9px; font-weight: 800; text-transform: uppercase; }
         .pending { background: rgba(234, 179, 8, 0.1); color: #eab308; }
         .success { background: rgba(34, 197, 94, 0.1); color: #22c55e; }
         .failed { background: rgba(239, 68, 68, 0.1); color: #ef4444; }
-
-        .auth-input { background: #1a1f29; border: 1px solid #2d3748; padding: 14px; border-radius: 12px; width: 100%; color: white; outline: none; }
+        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 100; align-items: center; justify-content: center; padding: 20px; }
     </style>
 </head>
 <body>
 
     <div id="authSection" class="flex items-center justify-center min-h-screen p-4">
         <div class="glass-card w-full max-w-sm p-8 rounded-[32px]">
-            <h1 class="text-2xl font-black text-center mb-6 uppercase italic text-yellow-500 tracking-tighter">Member Access</h1>
+            <h1 class="text-2xl font-black text-center mb-6 uppercase italic text-yellow-500 tracking-tighter">Member Login</h1>
             <input type="email" id="email" placeholder="Email" class="auth-input mb-4">
             <input type="password" id="pass" placeholder="Password" class="auth-input mb-6">
-            <button onclick="login()" class="w-full py-4 bg-yellow-500 text-black font-black rounded-2xl uppercase">Login to Dashboard</button>
+            <button onclick="login()" class="w-full py-4 bg-yellow-500 text-black font-black rounded-2xl uppercase">Enter Dashboard</button>
         </div>
     </div>
 
     <div id="dashboard" class="hidden p-4 max-w-md mx-auto">
-        <div class="flex justify-between items-center py-6">
+        <header class="flex justify-between items-center py-6">
             <div>
-                <p class="text-[10px] text-gray-500 font-extrabold uppercase tracking-widest">Available Balance</p>
+                <p id="userEmailDisp" class="text-[10px] text-gray-500 font-bold uppercase mb-1">user@mail.com</p>
                 <h2 id="balanceDisp" class="text-3xl font-black text-white">$0.00</h2>
             </div>
-            <button onclick="auth.signOut()" class="text-[10px] font-bold text-gray-500 border border-white/10 px-3 py-1 rounded-lg">LOGOUT</button>
+            <button onclick="auth.signOut()" class="bg-white/5 border border-white/10 p-2 rounded-full px-4 text-[10px] font-black">LOGOUT</button>
+        </header>
+
+        <div class="grid grid-cols-2 gap-4 mb-8">
+            <button onclick="openModal('depM')" class="py-4 bg-green-500 text-black rounded-2xl font-black uppercase text-xs shadow-lg shadow-green-500/20">Deposit</button>
+            <button onclick="openModal('witM')" class="py-4 bg-red-500 text-white rounded-2xl font-black uppercase text-xs shadow-lg shadow-red-500/20">Withdraw</button>
         </div>
 
-        <div class="grid grid-cols-2 gap-3 mb-8">
-            <button onclick="loadData('deposits')" id="depBtn" class="py-4 rounded-2xl font-black uppercase text-xs btn-deposit shadow-lg shadow-green-500/20">Deposits</button>
-            <button onclick="loadData('withdraws')" id="witBtn" class="py-4 rounded-2xl font-black uppercase text-xs btn-withdraw shadow-lg shadow-red-500/20">Withdrawals</button>
-        </div>
-
-        <h3 id="listTitle" class="text-[11px] font-black text-gray-500 uppercase mb-4 tracking-widest">Transaction History</h3>
-        
-        <div id="contentList">
+        <div class="flex justify-between items-center mb-4">
+            <h3 class="text-[11px] font-black text-gray-500 uppercase tracking-widest">Your Transactions</h3>
+            <div class="flex gap-2">
+                <button onclick="loadHistory('requests')" class="text-[9px] font-bold text-green-500 uppercase">Deposits</button>
+                <button onclick="loadHistory('withdrawals')" class="text-[9px] font-bold text-red-500 uppercase">Withdrawals</button>
             </div>
+        </div>
+        
+        <div id="historyList"></div>
+    </div>
+
+    <div id="depM" class="modal">
+        <div class="glass-card p-6 rounded-[30px] w-full max-w-sm text-center">
+            <h2 class="text-lg font-black text-green-500 mb-6 uppercase">New Deposit</h2>
+            <input type="number" id="dAmount" placeholder="Amount (PKR)" class="auth-input mb-3">
+            <input type="text" id="dTxid" placeholder="Transaction ID (TXID)" class="auth-input mb-6">
+            <button onclick="submitDeposit()" class="w-full py-4 bg-green-500 text-black font-black rounded-xl uppercase">Submit Deposit</button>
+            <button onclick="closeModal('depM')" class="mt-4 text-[10px] font-bold text-gray-500 uppercase">Close</button>
+        </div>
+    </div>
+
+    <div id="witM" class="modal">
+        <div class="glass-card p-6 rounded-[30px] w-full max-w-sm text-center">
+            <h2 class="text-lg font-black text-red-500 mb-6 uppercase">Withdraw Money</h2>
+            <input type="text" id="wBank" placeholder="JazzCash / EasyPaisa / Bank" class="auth-input mb-3">
+            <input type="text" id="wAcc" placeholder="Account Number" class="auth-input mb-3">
+            <input type="number" id="wAmount" placeholder="Amount (PKR)" class="auth-input mb-6">
+            <button onclick="submitWithdraw()" class="w-full py-4 bg-red-500 text-white font-black rounded-xl uppercase">Request Withdrawal</button>
+            <button onclick="closeModal('witM')" class="mt-4 text-[10px] font-bold text-gray-500 uppercase">Close</button>
+        </div>
     </div>
 
     <script>
-        // Your Firebase Config
         const firebaseConfig = { 
             apiKey: "AIzaSyAySRA1YSpTpmC8WjnKmDhnNMHkEmkeP50", 
             authDomain: "waqas-47f30.firebaseapp.com", 
@@ -91,12 +94,11 @@
             if(user) {
                 document.getElementById('authSection').classList.add('hidden');
                 document.getElementById('dashboard').classList.remove('hidden');
-                
-                // Balance update
+                document.getElementById('userEmailDisp').innerText = user.email;
                 db.collection('users').doc(user.uid).onSnapshot(doc => {
                     if(doc.exists) document.getElementById('balanceDisp').innerText = "$" + (doc.data().balance || 0).toFixed(2);
                 });
-                loadData('deposits'); // Default view
+                loadHistory('requests');
             } else {
                 document.getElementById('authSection').classList.remove('hidden');
                 document.getElementById('dashboard').classList.add('hidden');
@@ -105,47 +107,65 @@
 
         async function login() {
             const e = document.getElementById('email').value, p = document.getElementById('pass').value;
-            try { await auth.signInWithEmailAndPassword(e, p); } catch(err) { alert(err.message); }
+            try { await auth.signInWithEmailAndPassword(e, p); } catch(err) { alert("Invalid Credentials"); }
         }
 
-        async function loadData(type) {
-            const list = document.getElementById('contentList');
-            const title = document.getElementById('listTitle');
-            list.innerHTML = '<p class="text-center py-10 text-gray-600 text-xs">Syncing data...</p>';
+        function openModal(id) { document.getElementById(id).style.display = 'flex'; }
+        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+
+        async function submitDeposit() {
+            const amt = document.getElementById('dAmount').value, tx = document.getElementById('dTxid').value;
+            if(!amt || !tx) return alert("Enter details");
+            await db.collection('requests').add({
+                uid: auth.currentUser.uid,
+                email: auth.currentUser.email,
+                amount: amt,
+                txid: tx,
+                status: 'Pending',
+                time: Date.now()
+            });
+            alert("Deposit Submitted!"); closeModal('depM'); loadHistory('requests');
+        }
+
+        async function submitWithdraw() {
+            const amt = document.getElementById('wAmount').value, bank = document.getElementById('wBank').value, acc = document.getElementById('wAcc').value;
+            if(!amt || !bank || !acc) return alert("Fill all fields");
+            await db.collection('withdrawals').add({
+                uid: auth.currentUser.uid,
+                email: auth.currentUser.email,
+                amount: amt,
+                bankName: bank,
+                accountNumber: acc,
+                status: 'Pending',
+                time: Date.now()
+            });
+            alert("Withdrawal Requested!"); closeModal('witM'); loadHistory('withdrawals');
+        }
+
+        async function loadHistory(coll) {
+            const list = document.getElementById('historyList');
+            list.innerHTML = '<p class="text-center py-10 text-[10px] font-bold text-gray-700">SYNCING...</p>';
+            const snap = await db.collection(coll).where('uid', '==', auth.currentUser.uid).get();
             
-            title.innerText = type === 'deposits' ? "Deposit History" : "Withdrawal History";
-            const collection = type === 'deposits' ? 'requests' : 'withdrawals';
-            const uid = auth.currentUser.uid;
-
-            try {
-                const snap = await db.collection(collection).where('uid', '==', uid).get();
-                if(snap.empty) {
-                    list.innerHTML = `<p class="text-center py-10 text-gray-700 italic text-sm">No ${type} found.</p>`;
-                    return;
-                }
-
-                let html = '';
-                snap.forEach(doc => {
-                    const data = doc.data();
-                    const status = data.status || 'Pending'; // Default is pending
-                    const statusClass = status.toLowerCase();
-                    
-                    html += `
-                    <div class="history-card">
-                        <div>
-                            <p class="text-xs font-black text-white uppercase tracking-tight">${type === 'deposits' ? 'Deposit' : 'Withdraw'}</p>
-                            <p class="text-[10px] text-gray-500 font-bold mt-1 uppercase">${type === 'deposits' ? (data.txid || 'TXID: N/A') : data.bankName}</p>
-                        </div>
-                        <div class="text-right">
-                            <p class="text-sm font-black text-white mb-2">Rs. ${data.amount}</p>
-                            <span class="status-badge ${statusClass}">${status}</span>
-                        </div>
-                    </div>`;
-                });
-                list.innerHTML = html;
-            } catch (e) {
-                list.innerHTML = `<p class="text-center text-red-500 text-xs py-10">Data indexing required. Check console.</p>`;
-            }
+            if(snap.empty) { list.innerHTML = '<p class="text-center py-10 text-gray-600 text-xs">No records found.</p>'; return; }
+            
+            let html = '';
+            snap.forEach(doc => {
+                const data = doc.data();
+                const st = data.status || 'Pending';
+                html += `
+                <div class="history-card">
+                    <div>
+                        <p class="text-[10px] font-black text-white uppercase">${coll === 'requests' ? 'Deposit' : 'Withdraw'}</p>
+                        <p class="text-[9px] text-gray-500 font-bold mt-1 uppercase">${coll === 'requests' ? data.txid : data.bankName}</p>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-sm font-black text-white mb-2">Rs. ${data.amount}</p>
+                        <span class="status-badge ${st.toLowerCase()}">${st}</span>
+                    </div>
+                </div>`;
+            });
+            list.innerHTML = html;
         }
     </script>
 </body>
