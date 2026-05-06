@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Member Hub | ProTrade Elite</title>
+    <title>Dubai Live Trade | Member Hub</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
@@ -11,106 +11,121 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
         body { background: #05070a; color: #e2e8f0; font-family: 'Plus Jakarta Sans', sans-serif; min-height: 100vh; margin: 0; }
-        .glass-card { background: rgba(17, 24, 39, 0.7); backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,0.05); }
-        .auth-input { background: #0f172a; border: 1px solid #1e293b; padding: 16px; border-radius: 16px; width: 100%; color: white; outline: none; transition: 0.3s; }
-        .auth-input:focus { border-color: #eab308; box-shadow: 0 0 15px rgba(234, 179, 8, 0.1); }
-        .action-btn { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
-        .action-btn:active { transform: scale(0.95); }
-        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 1000; align-items: center; justify-content: center; padding: 20px; }
-        .step-circle { width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 800; border: 2px solid #2d3748; color: #2d3748; }
-        .step-active { border-color: #eab308; color: #eab308; background: rgba(234, 179, 8, 0.1); }
-        .history-card { background: linear-gradient(145deg, #0f172a 0%, #05070a 100%); border: 1px solid rgba(255,255,255,0.03); border-radius: 24px; padding: 20px; margin-bottom: 12px; }
-        .status-pill { padding: 4px 12px; border-radius: 50px; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }
-        .pending { background: rgba(234, 179, 8, 0.1); color: #eab308; border: 1px solid rgba(234, 179, 8, 0.2); }
-        .success { background: rgba(34, 197, 94, 0.1); color: #22c55e; border: 1px solid rgba(34, 197, 94, 0.2); }
-        .failed { background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.2); }
+        .glass-card { background: rgba(17, 24, 39, 0.7); backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.05); }
+        .auth-input { background: #0f172a; border: 1px solid #1e293b; padding: 12px; border-radius: 12px; width: 100%; color: white; outline: none; font-size: 13px; transition: 0.3s; }
+        .auth-input:focus { border-color: #eab308; }
+        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.96); z-index: 1000; align-items: center; justify-content: center; padding: 15px; }
+        .nav-btn { padding: 8px 16px; border-radius: 10px; font-size: 11px; font-weight: 800; text-transform: uppercase; transition: 0.2s; }
+        .history-card { background: #0f172a; border-radius: 16px; padding: 15px; margin-bottom: 10px; border: 1px solid rgba(255,255,255,0.03); display: flex; justify-content: space-between; align-items: center; }
+        .status-pill { padding: 3px 10px; border-radius: 50px; font-size: 9px; font-weight: 800; text-transform: uppercase; }
+        .pending { background: rgba(234, 179, 8, 0.1); color: #eab308; }
+        .success { background: rgba(34, 197, 94, 0.1); color: #22c55e; }
+        .failed { background: rgba(239, 68, 68, 0.1); color: #ef4444; }
     </style>
 </head>
 <body>
 
     <div id="authSection" class="flex items-center justify-center min-h-screen p-6">
-        <div class="glass-card w-full max-w-sm p-10 rounded-[40px] shadow-2xl">
-            <div class="text-center mb-10">
-                <h1 class="text-3xl font-black text-white italic tracking-tighter uppercase">Member Portal</h1>
-                <p class="text-gray-500 text-[10px] font-bold uppercase tracking-[0.2em] mt-2">Professional Finance Management</p>
-            </div>
-            <input type="email" id="email" placeholder="Account Email" class="auth-input mb-4">
-            <input type="password" id="pass" placeholder="Password" class="auth-input mb-8">
-            <button onclick="login()" class="action-btn w-full py-5 bg-yellow-500 text-black font-black rounded-2xl uppercase shadow-lg shadow-yellow-500/20">Sign In Now</button>
+        <div class="glass-card w-full max-w-sm p-8 rounded-[30px] text-center">
+            <h1 class="text-2xl font-black text-white italic uppercase tracking-tighter mb-8">Dubai Live Trade</h1>
+            <input type="email" id="email" placeholder="Email" class="auth-input mb-3">
+            <input type="password" id="pass" placeholder="Password" class="auth-input mb-6">
+            <button onclick="login()" class="w-full py-4 bg-yellow-500 text-black font-black rounded-xl uppercase text-xs tracking-widest">Sign In</button>
         </div>
     </div>
 
-    <div id="dashboard" class="hidden p-6 max-w-md mx-auto">
-        <header class="flex justify-between items-center py-8">
-            <div>
-                <h2 id="balanceDisp" class="text-4xl font-black text-white tracking-tighter">$0.00</h2>
-                <p id="userEmailDisp" class="text-[10px] text-yellow-500 font-extrabold uppercase mt-1 opacity-80 italic"></p>
+    <div id="dashboard" class="hidden p-4 max-w-md mx-auto">
+        <header class="flex justify-between items-center py-6">
+            <div class="flex items-center gap-3">
+                <div onclick="showM('profileM')" class="w-10 h-10 rounded-full bg-yellow-500 border-2 border-white/10 flex items-center justify-center text-black font-black text-xs cursor-pointer">👤</div>
+                <div>
+                    <h2 id="balanceDisp" class="text-2xl font-black text-white">$0.00</h2>
+                    <p class="text-[9px] text-gray-500 font-bold uppercase tracking-widest">Live Portfolio</p>
+                </div>
             </div>
-            <button onclick="auth.signOut()" class="bg-white/5 border border-white/10 w-12 h-12 rounded-2xl flex items-center justify-center text-xl">✕</button>
+            <div class="flex gap-2">
+                <button onclick="openDep()" class="nav-btn bg-white text-black">Deposit</button>
+                <button onclick="showM('witM')" class="nav-btn bg-white/5 border border-white/10 text-white">Withdraw</button>
+            </div>
         </header>
 
-        <div class="grid grid-cols-2 gap-4 mb-10">
-            <button onclick="openM('depM')" class="action-btn py-5 bg-white text-black rounded-[24px] font-black uppercase text-[11px] tracking-widest shadow-xl">Deposit</button>
-            <button onclick="openM('witM')" class="action-btn py-5 bg-[#1e293b] text-white rounded-[24px] font-black uppercase text-[11px] tracking-widest border border-white/5 shadow-xl">Withdraw</button>
-        </div>
-
-        <div class="flex justify-between items-end mb-6">
-            <h3 class="text-[12px] font-black text-white uppercase tracking-widest italic">Ledger History</h3>
-            <div class="flex gap-4">
-                <button onclick="loadHistory('requests')" class="text-[10px] font-bold text-gray-500 hover:text-white transition uppercase">Deposits</button>
-                <button onclick="loadHistory('withdrawals')" class="text-[10px] font-bold text-gray-500 hover:text-white transition uppercase">Withdrawals</button>
+        <div class="mt-4">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-[10px] font-black text-gray-500 uppercase tracking-widest italic">Ledger Summary</h3>
+                <button onclick="showM('historyM')" class="text-[10px] font-bold text-yellow-500 underline uppercase">View All History</button>
             </div>
+            <div id="quickHistory" class="space-y-3">
+                </div>
         </div>
-        
-        <div id="historyList" class="space-y-4"></div>
+    </div>
+
+    <div id="profileM" class="modal">
+        <div class="glass-card p-6 rounded-[24px] w-full max-w-xs text-center relative">
+            <button onclick="hideM('profileM')" class="absolute top-4 right-4 text-gray-500 text-xl">&times;</button>
+            <div class="w-16 h-16 bg-yellow-500 rounded-full mx-auto mb-4 flex items-center justify-center text-2xl font-black text-black">👤</div>
+            <p id="userEmailDisp" class="text-white font-bold text-sm mb-1 italic">user@mail.com</p>
+            <p class="text-[9px] text-gray-500 font-bold uppercase tracking-widest mb-6">Verified Member</p>
+            <button onclick="auth.signOut().then(()=>location.reload())" class="w-full py-3 bg-red-500/10 text-red-500 border border-red-500/20 rounded-xl font-bold uppercase text-[10px]">Logout Account</button>
+        </div>
     </div>
 
     <div id="depM" class="modal">
-        <div class="glass-card p-8 rounded-[40px] w-full max-w-sm">
-            <div class="flex justify-center gap-4 mb-8">
-                <div id="s1c" class="step-circle step-active">1</div>
-                <div id="s2c" class="step-circle">2</div>
-                <div id="s3c" class="step-circle">3</div>
+        <div class="glass-card p-6 rounded-[28px] w-full max-w-sm">
+            <div id="dStep1">
+                <h2 class="text-sm font-black text-white mb-6 uppercase text-center italic tracking-widest">Deposit Amount</h2>
+                <input type="number" id="dAmount" placeholder="Enter Amount (PKR)" class="auth-input mb-4 text-center">
+                <button onclick="toDStep(2)" class="w-full py-3 bg-yellow-500 text-black font-black rounded-xl uppercase text-[10px]">Continue</button>
             </div>
-
-            <div id="step1">
-                <h2 class="text-xl font-black text-white mb-2 uppercase text-center italic">Amount</h2>
-                <p class="text-[10px] text-gray-500 text-center mb-8 font-bold uppercase">Enter deposit amount in PKR</p>
-                <input type="number" id="dAmount" placeholder="0.00 PKR" class="auth-input mb-6 text-center text-xl font-black">
-                <button onclick="toStep(2)" class="action-btn w-full py-5 bg-yellow-500 text-black font-black rounded-2xl uppercase">Next Step</button>
-            </div>
-
-            <div id="step2" class="hidden text-center">
-                <h2 class="text-xl font-black text-white mb-6 uppercase italic">Scan QR Code</h2>
-                <div class="w-48 h-48 bg-white rounded-3xl mx-auto mb-6 flex items-center justify-center shadow-2xl overflow-hidden border-4 border-yellow-500/20">
-                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=ProTradePayment" alt="QR" class="w-full h-full opacity-80">
+            <div id="dStep2" class="hidden text-center">
+                <p class="text-[10px] text-yellow-500 font-black mb-4 uppercase tracking-widest">Dubai Live Trade | Official QR</p>
+                <div class="w-40 h-40 bg-white rounded-2xl mx-auto mb-4 flex items-center justify-center border-4 border-yellow-500/20">
+                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=DubaiLiveTrade" class="w-32 h-32">
                 </div>
-                <p class="text-[10px] text-gray-500 mb-8 font-bold uppercase px-4">Scan and pay the exact amount entered in Step 1</p>
-                <button onclick="toStep(3)" class="action-btn w-full py-5 bg-yellow-500 text-black font-black rounded-2xl uppercase italic">I Have Paid</button>
+                <p class="text-[9px] text-gray-500 mb-6 uppercase px-6">Pay to the official Dubai Live Trade merchant scanner</p>
+                <button onclick="toDStep(3)" class="w-full py-3 bg-yellow-500 text-black font-black rounded-xl uppercase text-[10px]">I Have Paid</button>
             </div>
-
-            <div id="step3" class="hidden">
-                <h2 class="text-xl font-black text-white mb-2 uppercase text-center italic">Verify</h2>
-                <p class="text-[10px] text-gray-500 text-center mb-8 font-bold uppercase">Enter your Transaction details</p>
-                <input type="text" id="dName" placeholder="Account Name" class="auth-input mb-3">
-                <input type="text" id="dTxid" placeholder="Transaction ID (TXID)" class="auth-input mb-8">
-                <button onclick="submitDeposit()" class="action-btn w-full py-5 bg-green-500 text-black font-black rounded-2xl uppercase">Submit for Review</button>
+            <div id="dStep3" class="hidden space-y-3">
+                <h2 class="text-sm font-black text-white mb-4 uppercase text-center italic">Transaction Details</h2>
+                <input type="text" id="dName" placeholder="Account Name" class="auth-input">
+                <input type="number" id="dSendAmt" placeholder="Sent Amount" class="auth-input">
+                <input type="text" id="dTxid" placeholder="Transaction ID (TXID)" class="auth-input">
+                <button onclick="submitDep()" class="w-full py-3 bg-green-500 text-black font-black rounded-xl uppercase text-[10px]">Submit Transaction</button>
             </div>
-            <button onclick="closeM('depM')" class="w-full mt-4 text-[10px] font-bold text-gray-600 uppercase tracking-widest">Cancel Transaction</button>
+            <button onclick="hideM('depM')" class="w-full mt-4 text-[9px] font-bold text-gray-600 uppercase">Cancel</button>
         </div>
     </div>
 
     <div id="witM" class="modal">
-        <div class="glass-card p-8 rounded-[40px] w-full max-w-sm">
-            <h2 class="text-xl font-black text-white mb-2 uppercase text-center italic">Withdrawal</h2>
-            <p class="text-[10px] text-gray-500 text-center mb-8 font-bold uppercase tracking-widest">Request your funds</p>
-            <div class="space-y-3 mb-8">
-                <input type="text" id="wBank" placeholder="Method (JazzCash/EasyPaisa)" class="auth-input">
-                <input type="text" id="wAcc" placeholder="Account Number" class="auth-input">
-                <input type="number" id="wAmount" placeholder="Amount in PKR" class="auth-input">
+        <div class="glass-card p-6 rounded-[28px] w-full max-w-sm">
+            <h2 class="text-sm font-black text-white mb-6 uppercase text-center italic tracking-widest">Withdrawal Request</h2>
+            <div class="space-y-3">
+                <select id="wBank" class="auth-input">
+                    <option value="" disabled selected>Choose Method</option>
+                    <option value="JazzCash">JazzCash</option>
+                    <option value="EasyPaisa">EasyPaisa</option>
+                    <option value="HBL Bank">HBL Bank</option>
+                    <option value="Faisal Bank">Faisal Bank</option>
+                </select>
+                <input type="text" id="wAccNum" placeholder="Account Number" class="auth-input">
+                <input type="text" id="wAccName" placeholder="Account Name" class="auth-input">
+                <input type="number" id="wAmt" placeholder="Withdraw Amount (PKR)" class="auth-input">
             </div>
-            <button onclick="submitWithdraw()" class="action-btn w-full py-5 bg-white text-black font-black rounded-2xl uppercase italic shadow-xl">Submit Request</button>
-            <button onclick="closeM('witM')" class="w-full mt-4 text-[10px] font-bold text-gray-600 uppercase tracking-widest">Return to Dashboard</button>
+            <button onclick="submitWit()" class="w-full py-3 bg-white text-black font-black rounded-xl uppercase text-[10px] mt-6">Submit Request</button>
+            <button onclick="hideM('witM')" class="w-full mt-4 text-[9px] font-bold text-gray-600 uppercase">Return</button>
+        </div>
+    </div>
+
+    <div id="historyM" class="modal">
+        <div class="glass-card p-6 rounded-[28px] w-full max-w-sm h-[80vh] flex flex-col">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-xs font-black text-white uppercase italic">Ledger History</h2>
+                <div class="flex gap-2">
+                    <button onclick="loadHistory('requests')" class="text-[9px] font-bold text-yellow-500 uppercase">Dep</button>
+                    <button onclick="loadHistory('withdrawals')" class="text-[9px] font-bold text-red-500 uppercase">Wit</button>
+                </div>
+            </div>
+            <div id="fullHistoryList" class="flex-grow overflow-y-auto space-y-3 pr-2"></div>
+            <button onclick="hideM('historyM')" class="w-full mt-4 py-3 bg-white/5 border border-white/10 text-white font-black rounded-xl uppercase text-[9px]">Close History</button>
         </div>
     </div>
 
@@ -134,7 +149,7 @@
                 db.collection('users').doc(user.uid).onSnapshot(doc => {
                     if(doc.exists) document.getElementById('balanceDisp').innerText = "$" + (doc.data().balance || 0).toFixed(2);
                 });
-                loadHistory('requests');
+                loadHistory('requests', 'quickHistory');
             } else {
                 document.getElementById('authSection').classList.remove('hidden');
                 document.getElementById('dashboard').classList.add('hidden');
@@ -143,24 +158,21 @@
 
         async function login() {
             const e = document.getElementById('email').value, p = document.getElementById('pass').value;
-            try { await auth.signInWithEmailAndPassword(e, p); } catch(err) { alert("Access Denied: " + err.message); }
+            try { await auth.signInWithEmailAndPassword(e, p); } catch(err) { alert(err.message); }
         }
 
-        function openM(id) { document.getElementById(id).style.display = 'flex'; if(id==='depM') toStep(1); }
-        function closeM(id) { document.getElementById(id).style.display = 'none'; }
+        function showM(id) { document.getElementById(id).style.display = 'flex'; }
+        function hideM(id) { document.getElementById(id).style.display = 'none'; }
+        function openDep() { showM('depM'); toDStep(1); }
 
-        function toStep(s) {
-            [1,2,3].forEach(n => {
-                document.getElementById('step'+n).classList.add('hidden');
-                document.getElementById('s'+n+'c').classList.remove('step-active');
-            });
-            document.getElementById('step'+s).classList.remove('hidden');
-            document.getElementById('s'+s+'c').classList.add('step-active');
+        function toDStep(s) {
+            ['dStep1','dStep2','dStep3'].forEach(d => document.getElementById(d).classList.add('hidden'));
+            document.getElementById('dStep'+s).classList.remove('hidden');
         }
 
-        async function submitDeposit() {
-            const amt = document.getElementById('dAmount').value, tx = document.getElementById('dTxid').value, name = document.getElementById('dName').value;
-            if(!amt || !tx || !name) return alert("All fields are required");
+        async function submitDep() {
+            const amt = document.getElementById('dSendAmt').value, tx = document.getElementById('dTxid').value, name = document.getElementById('dName').value;
+            if(!amt || !tx || !name) return alert("Fill all fields");
             await db.collection('requests').add({
                 uid: auth.currentUser.uid,
                 email: auth.currentUser.email,
@@ -170,48 +182,44 @@
                 status: 'Pending',
                 time: Date.now()
             });
-            alert("Payment recorded. Our team will verify it shortly."); closeM('depM'); loadHistory('requests');
+            alert("Deposit Submitted to Dubai Live Trade Admin"); hideM('depM');
         }
 
-        async function submitWithdraw() {
-            const amt = document.getElementById('wAmount').value, bank = document.getElementById('wBank').value, acc = document.getElementById('wAcc').value;
-            if(!amt || !bank || !acc) return alert("Invalid details");
+        async function submitWit() {
+            const amt = document.getElementById('wAmt').value, bank = document.getElementById('wBank').value, acc = document.getElementById('wAccNum').value, name = document.getElementById('wAccName').value;
+            if(!amt || !bank || !acc || !name) return alert("Missing Info");
             await db.collection('withdrawals').add({
                 uid: auth.currentUser.uid,
                 email: auth.currentUser.email,
                 amount: amt,
                 bankName: bank,
                 accountNumber: acc,
+                accountName: name,
                 status: 'Pending',
                 time: Date.now()
             });
-            alert("Withdrawal request sent."); closeM('witM'); loadHistory('withdrawals');
+            alert("Withdrawal Requested"); hideM('witM');
         }
 
-        async function loadHistory(coll) {
-            const list = document.getElementById('historyList');
-            list.innerHTML = '<div class="h-40 flex items-center justify-center"><div class="w-6 h-6 border-2 border-yellow-500 border-t-transparent rounded-full animate-spin"></div></div>';
+        async function loadHistory(coll, targetId = 'fullHistoryList') {
+            const list = document.getElementById(targetId);
+            list.innerHTML = '<p class="text-center py-10 text-[9px] font-bold text-gray-700 uppercase">Syncing...</p>';
+            const snap = await db.collection(coll).where('uid', '==', auth.currentUser.uid).orderBy('time', 'desc').limit(20).get();
             
-            const snap = await db.collection(coll).where('uid', '==', auth.currentUser.uid).orderBy('time', 'desc').limit(15).get();
-            if(snap.empty) { list.innerHTML = '<p class="text-center py-20 text-gray-700 text-[10px] font-black uppercase tracking-widest">No Records Found</p>'; return; }
+            if(snap.empty) { list.innerHTML = '<p class="text-center py-10 text-gray-700 text-[9px] uppercase">No Records</p>'; return; }
             
             let html = '';
             snap.forEach(doc => {
                 const d = doc.data();
                 const st = d.status || 'Pending';
                 html += `
-                <div class="history-card shadow-2xl">
-                    <div class="flex items-center gap-4">
-                        <div class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-xs font-black">
-                            ${coll === 'requests' ? '📥' : '📤'}
-                        </div>
-                        <div>
-                            <p class="text-[10px] font-black text-white uppercase italic tracking-tighter">${coll === 'requests' ? 'Security Deposit' : 'Cash Withdrawal'}</p>
-                            <p class="text-[9px] text-gray-600 font-bold mt-1 uppercase">${coll === 'requests' ? 'TXID: '+d.txid : d.bankName}</p>
-                        </div>
+                <div class="history-card">
+                    <div>
+                        <p class="text-[10px] font-black text-white uppercase italic">${coll==='requests'?'Deposit':'Withdraw'}</p>
+                        <p class="text-[8px] text-gray-600 font-bold mt-1 uppercase">${coll==='requests'? d.txid : d.bankName}</p>
                     </div>
                     <div class="text-right">
-                        <p class="text-sm font-black text-white mb-2">PKR ${d.amount}</p>
+                        <p class="text-xs font-black text-white mb-2">Rs. ${d.amount}</p>
                         <span class="status-pill ${st.toLowerCase()}">${st}</span>
                     </div>
                 </div>`;
