@@ -36,12 +36,9 @@
     <div id="authSec" class="flex items-center justify-center min-h-screen p-6">
         <div class="glass w-full max-w-xs p-8 rounded-[25px] text-center shadow-2xl">
             <h1 class="text-xl font-black text-white italic uppercase mb-6 tracking-tighter">Dubai Live Trade</h1>
-            <input type="email" id="email" placeholder="Email" class="auth-input mb-3">
+            <input type="email" id="email" placeholder="Email Address" class="auth-input mb-3">
             <input type="password" id="pass" placeholder="Password" class="auth-input mb-5">
-            <div class="flex gap-2">
-                <button onclick="handleAuth('login')" class="flex-1 py-3 bg-yellow-500 text-black font-black rounded-xl uppercase text-[10px]">Login</button>
-                <button onclick="handleAuth('reg')" class="flex-1 py-3 border border-white/10 text-white font-black rounded-xl uppercase text-[10px]">Sign Up</button>
-            </div>
+            <button onclick="handleAuth('login')" class="w-full py-3 bg-yellow-500 text-black font-black rounded-xl uppercase text-[10px]">Login Account</button>
         </div>
     </div>
 
@@ -171,16 +168,12 @@
             }
         });
 
-        async function handleAuth(mode) {
+        async function handleAuth() {
             const e = document.getElementById('email').value, p = document.getElementById('pass').value;
             if(!e || !p) return showToast("Fill Details", "⚠️", "#eab308");
             try {
-                if(mode === 'login') { await auth.signInWithEmailAndPassword(e, p); showToast("Logged In", "👤", "#22c55e"); }
-                else { 
-                    const r = await auth.createUserWithEmailAndPassword(e, p);
-                    await db.collection('users').doc(r.user.uid).set({ email: e, balance: 0, tradeMode: 'normal' });
-                    showToast("Account Created", "🎉", "#22c55e");
-                }
+                await auth.signInWithEmailAndPassword(e, p);
+                showToast("Logged In", "👤", "#22c55e");
             } catch(err) { showToast(err.message, "❌", "#ef4444"); }
         }
 
