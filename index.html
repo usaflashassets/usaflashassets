@@ -26,15 +26,11 @@
         #dashboard { max-width: 450px; margin: 0 auto; }
         
         .trade-btn-glow { 
-            box-shadow: 0 0 20px rgba(234, 179, 8, 0.3); 
+            box-shadow: 0 0 20px rgba(234, 179, 8, 0.4); 
             transition: 0.3s; 
             background: linear-gradient(135deg, #facc15 0%, #ca8a04 100%);
         }
-        .trade-btn-glow:hover { transform: scale(1.02); box-shadow: 0 0 30px rgba(234, 179, 8, 0.5); }
-        
-        /* Professional Market Icon Style */
-        .market-dot { height: 6px; width: 6px; background-color: #000; border-radius: 50%; display: inline-block; animation: pulse-black 2s infinite; }
-        @keyframes pulse-black { 0% { transform: scale(0.95); opacity: 1; } 70% { transform: scale(1.5); opacity: 0; } 100% { transform: scale(0.95); opacity: 0; } }
+        .trade-btn-glow:hover { transform: scale(1.02); box-shadow: 0 0 30px rgba(234, 179, 8, 0.6); }
     </style>
 </head>
 <body>
@@ -76,10 +72,12 @@
         </div>
         <button onclick="showM('histM')" class="w-full btn-small border border-white/10 bg-white/5 text-gray-400">Transaction History</button>
         
-        <a href="https://dubailivetrade.online/" class="mt-4 w-full flex items-center justify-center gap-3 py-4 text-black font-black rounded-xl uppercase text-[12px] trade-btn-glow tracking-widest">
-            <span class="market-dot"></span>
-            <span>Trade Terminal</span>
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
+        <a href="https://dubailivetrade.online/" class="mt-4 w-full flex items-center justify-center gap-3 py-4 text-black font-black rounded-xl uppercase text-[11px] trade-btn-glow">
+            <span>Trade Now</span>
+            <span class="flex items-center gap-1">
+                <span class="text-lg">🕯️</span>
+                <span class="text-lg">📊</span>
+            </span>
         </a>
     </div>
 
@@ -161,6 +159,7 @@
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth(), db = firebase.firestore();
 
+        // Persistence already set to LOCAL (Perfect)
         auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
 
         let currentDepMethod = '', userBalance = 0;
@@ -174,6 +173,7 @@
             setTimeout(() => t.style.display = 'none', 3500); 
         }
 
+        // Logic fix: Refresh handling
         auth.onAuthStateChanged(user => {
             if(user) {
                 document.getElementById('authSec').classList.add('hidden');
@@ -183,6 +183,7 @@
                     if(doc.exists) { userBalance = doc.data().balance || 0; document.getElementById('balanceDisp').innerText = "$" + userBalance.toFixed(2); }
                 });
             } else {
+                // Only show login if Firebase confirms no user is logged in
                 document.getElementById('authSec').classList.remove('hidden');
                 document.getElementById('dashboard').classList.add('hidden');
             }
@@ -278,4 +279,12 @@
                             <span class="opacity-50">${icon}</span>
                             <div><p class="font-black text-white uppercase text-[9px]">${coll==='requests'?'Dep':'Wit'}</p><p class="text-[7px] text-gray-500 uppercase">${d.currency}</p></div>
                         </div>
-                        <div class="text-right"><p class="font-black t
+                        <div class="text-right"><p class="font-black text-[10px] ${coll==='requests'?'text-green-500':'text-red-500'}">${d.currency==='USD'?'$':'Rs'}${d.amount}</p><span class="status-badge ${st.toLowerCase()}">${st}</span></div>
+                    </div>`;
+                });
+                list.innerHTML = html || '<p class="text-center py-10 text-[8px] opacity-20">EMPTY HISTORY</p>';
+            });
+        }
+    </script>
+</body>
+</html>
