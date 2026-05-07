@@ -206,25 +206,34 @@
         function showM(id) { document.getElementById(id).style.display = 'flex'; }
         function hideM(id) { document.getElementById(id).style.display = 'none'; }
         
-        // Reset and Hide
         function closeModal(id) {
             const modal = document.getElementById(id);
             const inputs = modal.querySelectorAll('input');
-            inputs.forEach(i => i.value = ''); // Reset values
+            inputs.forEach(i => i.value = ''); 
             hideM(id);
         }
 
         function openDep() { showM('depM'); toStepDep(0); }
-        function toStepDep(s) { ['d0','d1','d2','d3'].forEach(d => document.getElementById(d).classList.add('hidden')); document.getElementById('d'+s).classList.remove('hidden'); }
+        function toStepDep(s) { 
+            if(s === 2) {
+                const amt = parseFloat(document.getElementById('dAmount').value);
+                if(currentDepMethod === 'pkr' && (isNaN(amt) || amt < 2800)) return alert("Minimum Deposit is 2800 PKR");
+                if(currentDepMethod === 'crypto' && (isNaN(amt) || amt < 10)) return alert("Minimum Deposit is 10 USD");
+            }
+            ['d0','d1','d2','d3'].forEach(d => document.getElementById(d).classList.add('hidden')); 
+            document.getElementById('d'+s).classList.remove('hidden'); 
+        }
         
         function selectDepMethod(m) {
             currentDepMethod = m;
             if(m === 'crypto') {
                 document.getElementById('depQR').src = "https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=0x76ecfe8a3bd89297189e16cdcd275d743fb71a62";
                 document.getElementById('cryptoAddr').classList.remove('hidden');
+                document.getElementById('dAmount').placeholder = "Enter Amount (USD)";
             } else {
                 document.getElementById('depQR').src = "https://i.postimg.cc/HLPQpW92/Screenshot-20260504-033311.jpg";
                 document.getElementById('cryptoAddr').classList.add('hidden');
+                document.getElementById('dAmount').placeholder = "Enter Amount (PKR)";
             }
             toStepDep(1);
         }
@@ -235,10 +244,11 @@
                 const usd = (pkr / 280).toFixed(2);
                 const disp = document.getElementById('usdConvertDep');
                 if(pkr > 0) { disp.innerText = `Approx: $${usd}`; disp.classList.remove('hidden'); } else { disp.classList.add('hidden'); }
+            } else {
+                document.getElementById('usdConvertDep').classList.add('hidden');
             }
         }
 
-        // Fancy Toast Function
         function showToast(msg, icon, color) {
             const toast = document.getElementById('fancyToast');
             document.getElementById('toastMsg').innerText = msg;
@@ -249,11 +259,14 @@
         }
 
         async function submitDep() {
-            const amt = document.getElementById('dSent').value, tx = document.getElementById('dTxid').value, name = document.getElementById('dName').value;
+            const amt = parseFloat(document.getElementById('dSent').value), tx = document.getElementById('dTxid').value, name = document.getElementById('dName').value;
             if(!amt || !tx) return alert("Fill details");
+            if(currentDepMethod === 'pkr' && amt < 2800) return alert("Minimum 2800 PKR required");
+            if(currentDepMethod === 'crypto' && amt < 10) return alert("Minimum 10 USD required");
+
             await db.collection('requests').add({
                 uid: auth.currentUser.uid, email: auth.currentUser.email,
-                amount: parseFloat(amt), currency: currentDepMethod === 'crypto' ? 'USD' : 'PKR',
+                amount: amt, currency: currentDepMethod === 'crypto' ? 'USD' : 'PKR',
                 accountName: name, txid: tx, status: 'Pending', time: Date.now(), addedToBalance: false
             });
             closeModal('depM');
@@ -265,7 +278,8 @@
 
         async function submitWitCrypto() {
             const amt = parseFloat(document.getElementById('wcAmt').value);
-            if(!amt || userBalance < amt) return alert("Insufficient Balance");
+            if(!amt || amt < 10) return alert("Minimum Withdrawal is 10 USD");
+            if(userBalance < amt) return alert("Insufficient Balance");
             await db.collection('users').doc(auth.currentUser.uid).update({ balance: firebase.firestore.FieldValue.increment(-amt) });
             await db.collection('withdrawals').add({
                 uid: auth.currentUser.uid, email: auth.currentUser.email,
@@ -278,13 +292,15 @@
 
         async function submitWitPkr() {
             const amt = parseFloat(document.getElementById('wAmt').value);
+            if(!amt || amt < 2800) return alert("Minimum Withdrawal is 2800 PKR");
             const usd = amt / 280;
-            if(!amt || userBalance < usd) return alert("Insufficient Balance");
+            if(userBalance < usd) return alert("Insufficient Balance");
             await db.collection('users').doc(auth.currentUser.uid).update({ balance: firebase.firestore.FieldValue.increment(-usd) });
             await db.collection('withdrawals').add({
                 uid: auth.currentUser.uid, email: auth.currentUser.email,
                 amount: amt, currency: 'PKR', bankName: document.getElementById('wBank').value,
-                accountNumber: document.getElementById('wAccNum').value, status: 'Pending', time: Date.now()
+                accountNumber: document.getElementById('wAccNum').value, accountName: document.getElementById('wAccName').value, 
+                status: 'Pending', time: Date.now()
             });
             closeModal('witM');
             showToast("Withdrawal Pending!", "⏳", "#eab308");
@@ -301,13 +317,4 @@
                 docs.forEach(d => {
                     const st = d.status || 'Pending';
                     html += `<div class="history-card">
-                        <div><p class="font-black text-white uppercase text-[9px]">${coll==='requests'?'Deposit':'Withdraw'}</p><p class="text-[7px] text-gray-500 uppercase">${d.txid||d.bankName}</p></div>
-                        <div class="text-right"><p class="font-black text-[10px] ${coll==='requests'?'text-green-500':'text-red-500'}">${d.currency==='USD'?'$':'Rs.'}${d.amount}</p><span class="status-badge ${st.toLowerCase()}">${st}</span></div>
-                    </div>`;
-                });
-                list.innerHTML = html;
-            });
-        }
-    </script>
-</body>
-</html>
+                        <div><p class="font-black text-white uppercase text-[9px]">${coll==='requests'?'Deposit':'Withdraw'}</p><p class="text-[7px] text-gray-500 uppercase">${d.txid||d.bankName}</p>
