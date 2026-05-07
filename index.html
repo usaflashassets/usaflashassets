@@ -25,9 +25,12 @@
         .btn-small { padding: 12px; border-radius: 10px; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }
         #dashboard { max-width: 450px; margin: 0 auto; }
         
-        /* New Fancy Button Glow */
-        .trade-btn-glow { box-shadow: 0 0 20px rgba(234, 179, 8, 0.3); transition: 0.3s; }
-        .trade-btn-glow:hover { transform: scale(1.02); box-shadow: 0 0 30px rgba(234, 179, 8, 0.5); }
+        .trade-btn-glow { 
+            box-shadow: 0 0 20px rgba(234, 179, 8, 0.4); 
+            transition: 0.3s; 
+            background: linear-gradient(135deg, #facc15 0%, #ca8a04 100%);
+        }
+        .trade-btn-glow:hover { transform: scale(1.02); box-shadow: 0 0 30px rgba(234, 179, 8, 0.6); }
     </style>
 </head>
 <body>
@@ -69,9 +72,12 @@
         </div>
         <button onclick="showM('histM')" class="w-full btn-small border border-white/10 bg-white/5 text-gray-400">Transaction History</button>
         
-        <a href="https://dubailivetrade.online/" class="mt-3 w-full flex items-center justify-center gap-2 py-4 bg-gradient-to-r from-yellow-500 via-yellow-400 to-yellow-600 text-black font-black rounded-xl uppercase text-[11px] trade-btn-glow">
+        <a href="https://dubailivetrade.online/" class="mt-4 w-full flex items-center justify-center gap-3 py-4 text-black font-black rounded-xl uppercase text-[11px] trade-btn-glow">
             <span>Trade Now</span>
-            <span class="text-lg">🕯️</span>
+            <span class="flex items-center gap-1">
+                <span class="text-lg">🕯️</span>
+                <span class="text-lg">📊</span>
+            </span>
         </a>
     </div>
 
@@ -152,6 +158,10 @@
         const firebaseConfig = { apiKey: "AIzaSyAySRA1YSpTpmC8WjnKmDhnNMHkEmkeP50", authDomain: "waqas-47f30.firebaseapp.com", projectId: "waqas-47f30", storageBucket: "waqas-47f30.appspot.com", messagingSenderId: "374104279093", appId: "1:374104279093:web:6e1844b60456c700940364" };
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth(), db = firebase.firestore();
+
+        // Ensure Persistent Login (Keeps user logged in even after refresh)
+        auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+
         let currentDepMethod = '', userBalance = 0;
 
         function showToast(msg, icon, color) { 
