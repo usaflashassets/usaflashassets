@@ -11,34 +11,25 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
         
-        /* Zoom and Scroll prevention */
         html, body { 
-            background: #020408; 
-            color: #e2e8f0; 
-            font-family: 'Plus Jakarta Sans', sans-serif; 
-            margin: 0; 
-            min-height: 100vh;
-            overflow-x: hidden;
-            touch-action: manipulation;
+            background: #020408; color: #e2e8f0; font-family: 'Plus Jakarta Sans', sans-serif; 
+            margin: 0; min-height: 100vh; overflow-x: hidden; touch-action: manipulation;
         }
 
         .glass { background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,0.05); }
-        
-        /* Font size 16px is standard to prevent auto-zoom on mobile focus */
-        .auth-input { 
-            background: #0f172a; 
-            border: 1px solid #1e293b; 
-            padding: 10px; 
-            border-radius: 10px; 
-            width: 100%; 
-            color: white; 
-            outline: none; 
-            font-size: 16px; 
-        }
+        .auth-input { background: #0f172a; border: 1px solid #1e293b; padding: 10px; border-radius: 10px; width: 100%; color: white; outline: none; font-size: 16px; }
 
         .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.98); z-index: 1000; align-items: center; justify-content: center; padding: 15px; }
-        .history-card { background: #0a0f1d; border-radius: 12px; padding: 10px; margin-bottom: 8px; border: 1px solid rgba(255,255,255,0.03); display: flex; justify-content: space-between; align-items: center; }
         
+        /* Fancy Toast Popup */
+        #fancyToast {
+            display: none; position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
+            z-index: 2000; padding: 15px 25px; border-radius: 20px; text-align: center;
+            animation: slideDown 0.5s ease forwards;
+        }
+        @keyframes slideDown { from { top: -100px; opacity: 0; } to { top: 20px; opacity: 1; } }
+
+        .history-card { background: #0a0f1d; border-radius: 12px; padding: 10px; margin-bottom: 8px; border: 1px solid rgba(255,255,255,0.03); display: flex; justify-content: space-between; align-items: center; }
         .status-badge { padding: 2px 8px; border-radius: 50px; font-size: 8px; font-weight: 800; text-transform: uppercase; }
         .pending { background: rgba(234, 179, 8, 0.1); color: #eab308; }
         .success { background: rgba(34, 197, 94, 0.1); color: #22c55e; }
@@ -47,11 +38,15 @@
         .option-card { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.08); padding: 12px; border-radius: 12px; cursor: pointer; transition: 0.2s; margin-bottom: 8px; }
         .btn-small { padding: 12px; border-radius: 10px; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }
         
-        /* Desktop view restrict */
         #dashboard { max-width: 450px; margin: 0 auto; }
     </style>
 </head>
 <body>
+
+    <div id="fancyToast" class="glass">
+        <div id="toastIcon" class="text-2xl mb-1"></div>
+        <div id="toastMsg" class="text-xs font-black uppercase tracking-widest text-white"></div>
+    </div>
 
     <div id="authSec" class="flex items-center justify-center min-h-screen p-6">
         <div class="glass w-full max-w-xs p-8 rounded-[25px] text-center shadow-2xl">
@@ -123,7 +118,7 @@
                 <input type="text" id="dTxid" placeholder="Transaction ID" class="auth-input">
                 <button onclick="submitDep()" class="w-full btn-small bg-green-600 text-white">Submit Request</button>
             </div>
-            <button onclick="hideM('depM')" class="w-full mt-4 text-[9px] font-bold text-gray-600 uppercase text-center">Cancel</button>
+            <button onclick="closeModal('depM')" class="w-full mt-4 text-[9px] font-bold text-gray-600 uppercase text-center">Cancel</button>
         </div>
     </div>
 
@@ -147,7 +142,7 @@
                 <input type="number" id="wAmt" placeholder="Amount (PKR)" class="auth-input">
                 <button onclick="submitWitPkr()" class="w-full btn-small bg-white text-black">Confirm Withdrawal</button>
             </div>
-            <button onclick="hideM('witM')" class="w-full mt-4 text-[9px] font-bold text-gray-600 uppercase text-center">Cancel</button>
+            <button onclick="closeModal('witM')" class="w-full mt-4 text-[9px] font-bold text-gray-600 uppercase text-center">Cancel</button>
         </div>
     </div>
 
@@ -183,7 +178,7 @@
                         document.getElementById('balanceDisp').innerText = "$" + userBalance.toFixed(2);
                     }
                 });
-                // Auto Balance Increase on Admin Approval
+                
                 db.collection('requests').where('uid', '==', user.uid).where('status', '==', 'Success').onSnapshot(snap => {
                     snap.docChanges().forEach(change => {
                         if (change.type === "added" || change.type === "modified") {
@@ -210,6 +205,15 @@
 
         function showM(id) { document.getElementById(id).style.display = 'flex'; }
         function hideM(id) { document.getElementById(id).style.display = 'none'; }
+        
+        // Reset and Hide
+        function closeModal(id) {
+            const modal = document.getElementById(id);
+            const inputs = modal.querySelectorAll('input');
+            inputs.forEach(i => i.value = ''); // Reset values
+            hideM(id);
+        }
+
         function openDep() { showM('depM'); toStepDep(0); }
         function toStepDep(s) { ['d0','d1','d2','d3'].forEach(d => document.getElementById(d).classList.add('hidden')); document.getElementById('d'+s).classList.remove('hidden'); }
         
@@ -234,6 +238,16 @@
             }
         }
 
+        // Fancy Toast Function
+        function showToast(msg, icon, color) {
+            const toast = document.getElementById('fancyToast');
+            document.getElementById('toastMsg').innerText = msg;
+            document.getElementById('toastIcon').innerText = icon;
+            toast.style.borderColor = color;
+            toast.style.display = 'block';
+            setTimeout(() => { toast.style.display = 'none'; }, 3000);
+        }
+
         async function submitDep() {
             const amt = document.getElementById('dSent').value, tx = document.getElementById('dTxid').value, name = document.getElementById('dName').value;
             if(!amt || !tx) return alert("Fill details");
@@ -242,7 +256,8 @@
                 amount: parseFloat(amt), currency: currentDepMethod === 'crypto' ? 'USD' : 'PKR',
                 accountName: name, txid: tx, status: 'Pending', time: Date.now(), addedToBalance: false
             });
-            alert("Request Sent!"); hideM('depM');
+            closeModal('depM');
+            showToast("Request Submitted!", "✅", "#22c55e");
         }
 
         function openWit() { showM('witM'); document.getElementById('w0').classList.remove('hidden'); document.getElementById('wC').classList.add('hidden'); document.getElementById('wP').classList.add('hidden'); }
@@ -257,7 +272,8 @@
                 amount: amt, currency: 'USD', bankName: document.getElementById('wcNet').value,
                 accountNumber: document.getElementById('wcWallet').value, status: 'Pending', time: Date.now()
             });
-            alert("Submitted!"); hideM('witM');
+            closeModal('witM');
+            showToast("Withdrawal Pending!", "⏳", "#eab308");
         }
 
         async function submitWitPkr() {
@@ -270,7 +286,8 @@
                 amount: amt, currency: 'PKR', bankName: document.getElementById('wBank').value,
                 accountNumber: document.getElementById('wAccNum').value, status: 'Pending', time: Date.now()
             });
-            alert("Submitted!"); hideM('witM');
+            closeModal('witM');
+            showToast("Withdrawal Pending!", "⏳", "#eab308");
         }
 
         async function loadHistory(coll) {
