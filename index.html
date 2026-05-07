@@ -21,13 +21,18 @@
 
         .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.98); z-index: 1000; align-items: center; justify-content: center; padding: 15px; }
         
-        /* Fancy Toast Popup */
+        /* Ultra Fancy Toast */
         #fancyToast {
-            display: none; position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
-            z-index: 2000; padding: 15px 25px; border-radius: 20px; text-align: center;
-            animation: slideDown 0.5s ease forwards;
+            display: none; position: fixed; top: 25px; left: 50%; transform: translateX(-50%);
+            z-index: 2000; padding: 18px 30px; border-radius: 25px; text-align: center;
+            border-left: 5px solid; box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            animation: bounceIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
         }
-        @keyframes slideDown { from { top: -100px; opacity: 0; } to { top: 20px; opacity: 1; } }
+        @keyframes bounceIn { 
+            0% { top: -100px; opacity: 0; } 
+            60% { top: 35px; opacity: 1; }
+            100% { top: 25px; opacity: 1; } 
+        }
 
         .history-card { background: #0a0f1d; border-radius: 12px; padding: 10px; margin-bottom: 8px; border: 1px solid rgba(255,255,255,0.03); display: flex; justify-content: space-between; align-items: center; }
         .status-badge { padding: 2px 8px; border-radius: 50px; font-size: 8px; font-weight: 800; text-transform: uppercase; }
@@ -44,8 +49,9 @@
 <body>
 
     <div id="fancyToast" class="glass">
-        <div id="toastIcon" class="text-2xl mb-1"></div>
-        <div id="toastMsg" class="text-xs font-black uppercase tracking-widest text-white"></div>
+        <div id="toastIcon" class="text-3xl mb-1"></div>
+        <div id="toastMsg" class="text-[11px] font-black uppercase tracking-widest text-white"></div>
+        <div id="toastSub" class="text-[8px] text-gray-400 mt-1">Dubai Live Trade System</div>
     </div>
 
     <div id="authSec" class="flex items-center justify-center min-h-screen p-6">
@@ -102,7 +108,8 @@
                 <div onclick="selectDepMethod('crypto')" class="option-card text-center"><p class="text-white text-[11px] font-bold">Crypto (BEP20)</p></div>
                 <div onclick="selectDepMethod('pkr')" class="option-card text-center"><p class="text-white text-[11px] font-bold">PKR (Local Bank)</p></div>
             </div>
-            <div id="d1" class="hidden">
+            <div id="d1" class="hidden text-center">
+                <p class="text-[9px] text-yellow-500 font-black uppercase mb-3 italic">Minimum Deposit: $10 / 2800 PKR</p>
                 <input type="number" id="dAmount" oninput="calcUsdDep()" placeholder="Enter Amount" class="auth-input mb-2 text-center">
                 <p id="usdConvertDep" class="text-center text-[9px] text-yellow-500 font-bold mb-4 hidden"></p>
                 <button onclick="toStepDep(2)" class="w-full btn-small bg-yellow-500 text-black">Next Step</button>
@@ -124,8 +131,9 @@
 
     <div id="witM" class="modal">
         <div class="glass p-6 rounded-[25px] w-full max-w-xs">
-            <div id="w0" class="space-y-2">
-                <h2 class="text-[10px] font-black text-center mb-4 uppercase italic">Withdraw Method</h2>
+            <div id="w0" class="space-y-2 text-center">
+                <h2 class="text-[10px] font-black text-center mb-1 uppercase italic">Withdraw Method</h2>
+                <p class="text-[9px] text-red-500 font-black uppercase mb-4 italic">Minimum Withdraw: $10 / 2800 PKR</p>
                 <div onclick="selectWitMethod('crypto')" class="option-card text-center"><p class="text-white text-[11px] font-bold">Crypto Wallet</p></div>
                 <div onclick="selectWitMethod('pkr')" class="option-card text-center"><p class="text-white text-[11px] font-bold">PKR Bank/JazzCash</p></div>
             </div>
@@ -199,23 +207,33 @@
 
         async function login() {
             const e = document.getElementById('email').value, p = document.getElementById('pass').value;
-            if(!e || !p) return alert("Enter details");
-            try { await auth.signInWithEmailAndPassword(e, p); } catch(err) { alert(err.message); }
+            if(!e || !p) return showToast("Enter Details", "❌", "#ef4444");
+            try { await auth.signInWithEmailAndPassword(e, p); } catch(err) { showToast(err.message, "❌", "#ef4444"); }
         }
 
         function showM(id) { document.getElementById(id).style.display = 'flex'; }
         function hideM(id) { document.getElementById(id).style.display = 'none'; }
         
-        // Reset and Hide
         function closeModal(id) {
             const modal = document.getElementById(id);
             const inputs = modal.querySelectorAll('input');
-            inputs.forEach(i => i.value = ''); // Reset values
+            inputs.forEach(i => i.value = ''); 
             hideM(id);
         }
 
         function openDep() { showM('depM'); toStepDep(0); }
-        function toStepDep(s) { ['d0','d1','d2','d3'].forEach(d => document.getElementById(d).classList.add('hidden')); document.getElementById('d'+s).classList.remove('hidden'); }
+        function toStepDep(s) { 
+            if(s === 2) {
+                const amt = parseFloat(document.getElementById('dAmount').value);
+                const minLimit = currentDepMethod === 'crypto' ? 10 : 2800;
+                if(!amt || amt < minLimit) {
+                    showToast(`Min: ${currentDepMethod === 'crypto' ? '$10' : '2800 PKR'}`, "⚠️", "#eab308");
+                    return;
+                }
+            }
+            ['d0','d1','d2','d3'].forEach(d => document.getElementById(d).classList.add('hidden')); 
+            document.getElementById('d'+s).classList.remove('hidden'); 
+        }
         
         function selectDepMethod(m) {
             currentDepMethod = m;
@@ -238,26 +256,25 @@
             }
         }
 
-        // Fancy Toast Function
         function showToast(msg, icon, color) {
             const toast = document.getElementById('fancyToast');
             document.getElementById('toastMsg').innerText = msg;
             document.getElementById('toastIcon').innerText = icon;
             toast.style.borderColor = color;
             toast.style.display = 'block';
-            setTimeout(() => { toast.style.display = 'none'; }, 3000);
+            setTimeout(() => { toast.style.display = 'none'; }, 3500);
         }
 
         async function submitDep() {
             const amt = document.getElementById('dSent').value, tx = document.getElementById('dTxid').value, name = document.getElementById('dName').value;
-            if(!amt || !tx) return alert("Fill details");
+            if(!amt || !tx) return showToast("Fill Details", "⚠️", "#eab308");
             await db.collection('requests').add({
                 uid: auth.currentUser.uid, email: auth.currentUser.email,
                 amount: parseFloat(amt), currency: currentDepMethod === 'crypto' ? 'USD' : 'PKR',
                 accountName: name, txid: tx, status: 'Pending', time: Date.now(), addedToBalance: false
             });
             closeModal('depM');
-            showToast("Request Submitted!", "✅", "#22c55e");
+            showToast("Deposit Submitted!", "🚀", "#22c55e");
         }
 
         function openWit() { showM('witM'); document.getElementById('w0').classList.remove('hidden'); document.getElementById('wC').classList.add('hidden'); document.getElementById('wP').classList.add('hidden'); }
@@ -265,7 +282,8 @@
 
         async function submitWitCrypto() {
             const amt = parseFloat(document.getElementById('wcAmt').value);
-            if(!amt || userBalance < amt) return alert("Insufficient Balance");
+            if(!amt || amt < 10) return showToast("Min Withdraw $10", "⚠️", "#eab308");
+            if(userBalance < amt) return showToast("Insufficient Balance", "❌", "#ef4444");
             await db.collection('users').doc(auth.currentUser.uid).update({ balance: firebase.firestore.FieldValue.increment(-amt) });
             await db.collection('withdrawals').add({
                 uid: auth.currentUser.uid, email: auth.currentUser.email,
@@ -279,7 +297,8 @@
         async function submitWitPkr() {
             const amt = parseFloat(document.getElementById('wAmt').value);
             const usd = amt / 280;
-            if(!amt || userBalance < usd) return alert("Insufficient Balance");
+            if(!amt || amt < 2800) return showToast("Min Withdraw 2800", "⚠️", "#eab308");
+            if(userBalance < usd) return showToast("Insufficient Balance", "❌", "#ef4444");
             await db.collection('users').doc(auth.currentUser.uid).update({ balance: firebase.firestore.FieldValue.increment(-usd) });
             await db.collection('withdrawals').add({
                 uid: auth.currentUser.uid, email: auth.currentUser.email,
@@ -301,13 +320,4 @@
                 docs.forEach(d => {
                     const st = d.status || 'Pending';
                     html += `<div class="history-card">
-                        <div><p class="font-black text-white uppercase text-[9px]">${coll==='requests'?'Deposit':'Withdraw'}</p><p class="text-[7px] text-gray-500 uppercase">${d.txid||d.bankName}</p></div>
-                        <div class="text-right"><p class="font-black text-[10px] ${coll==='requests'?'text-green-500':'text-red-500'}">${d.currency==='USD'?'$':'Rs.'}${d.amount}</p><span class="status-badge ${st.toLowerCase()}">${st}</span></div>
-                    </div>`;
-                });
-                list.innerHTML = html;
-            });
-        }
-    </script>
-</body>
-</html>
+                        <div><p class="fon
