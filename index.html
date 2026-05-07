@@ -10,34 +10,19 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
-        
-        html, body { 
-            background: #020408; color: #e2e8f0; font-family: 'Plus Jakarta Sans', sans-serif; 
-            margin: 0; min-height: 100vh; overflow-x: hidden; touch-action: manipulation;
-        }
-
+        html, body { background: #020408; color: #e2e8f0; font-family: 'Plus Jakarta Sans', sans-serif; margin: 0; min-height: 100vh; overflow-x: hidden; touch-action: manipulation; }
         .glass { background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,0.05); }
         .auth-input { background: #0f172a; border: 1px solid #1e293b; padding: 10px; border-radius: 10px; width: 100%; color: white; outline: none; font-size: 16px; }
-
         .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.98); z-index: 1000; align-items: center; justify-content: center; padding: 15px; }
-        
-        /* Fancy Toast Popup */
-        #fancyToast {
-            display: none; position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
-            z-index: 2000; padding: 15px 25px; border-radius: 20px; text-align: center;
-            animation: slideDown 0.5s ease forwards;
-        }
+        #fancyToast { display: none; position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 2000; padding: 15px 25px; border-radius: 20px; text-align: center; animation: slideDown 0.5s ease forwards; }
         @keyframes slideDown { from { top: -100px; opacity: 0; } to { top: 20px; opacity: 1; } }
-
         .history-card { background: #0a0f1d; border-radius: 12px; padding: 10px; margin-bottom: 8px; border: 1px solid rgba(255,255,255,0.03); display: flex; justify-content: space-between; align-items: center; }
         .status-badge { padding: 2px 8px; border-radius: 50px; font-size: 8px; font-weight: 800; text-transform: uppercase; }
         .pending { background: rgba(234, 179, 8, 0.1); color: #eab308; }
         .success { background: rgba(34, 197, 94, 0.1); color: #22c55e; }
         .failed { background: rgba(239, 68, 68, 0.1); color: #ef4444; }
-
         .option-card { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.08); padding: 12px; border-radius: 12px; cursor: pointer; transition: 0.2s; margin-bottom: 8px; }
         .btn-small { padding: 12px; border-radius: 10px; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }
-        
         #dashboard { max-width: 450px; margin: 0 auto; }
     </style>
 </head>
@@ -53,7 +38,10 @@
             <h1 class="text-xl font-black text-white italic uppercase mb-6 tracking-tighter">Dubai Live Trade</h1>
             <input type="email" id="email" placeholder="Email" class="auth-input mb-3">
             <input type="password" id="pass" placeholder="Password" class="auth-input mb-5">
-            <button onclick="login()" class="w-full py-3 bg-yellow-500 text-black font-black rounded-xl uppercase text-[10px]">Login Account</button>
+            <div class="flex gap-2">
+                <button onclick="handleAuth('login')" class="flex-1 py-3 bg-yellow-500 text-black font-black rounded-xl uppercase text-[10px]">Login</button>
+                <button onclick="handleAuth('reg')" class="flex-1 py-3 border border-white/10 text-white font-black rounded-xl uppercase text-[10px]">Sign Up</button>
+            </div>
         </div>
     </div>
 
@@ -155,14 +143,7 @@
     </div>
 
     <script>
-        const firebaseConfig = { 
-            apiKey: "AIzaSyAySRA1YSpTpmC8WjnKmDhnNMHkEmkeP50", 
-            authDomain: "waqas-47f30.firebaseapp.com", 
-            projectId: "waqas-47f30", 
-            storageBucket: "waqas-47f30.appspot.com", 
-            messagingSenderId: "374104279093", 
-            appId: "1:374104279093:web:6e1844b60456c700940364" 
-        };
+        const firebaseConfig = { apiKey: "AIzaSyAySRA1YSpTpmC8WjnKmDhnNMHkEmkeP50", authDomain: "waqas-47f30.firebaseapp.com", projectId: "waqas-47f30", storageBucket: "waqas-47f30.appspot.com", messagingSenderId: "374104279093", appId: "1:374104279093:web:6e1844b60456c700940364" };
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth(), db = firebase.firestore();
         let currentDepMethod = '', userBalance = 0;
@@ -173,23 +154,7 @@
                 document.getElementById('dashboard').classList.remove('hidden');
                 document.getElementById('uEmail').innerText = user.email;
                 db.collection('users').doc(user.uid).onSnapshot(doc => {
-                    if(doc.exists) {
-                        userBalance = doc.data().balance || 0;
-                        document.getElementById('balanceDisp').innerText = "$" + userBalance.toFixed(2);
-                    }
-                });
-                
-                db.collection('requests').where('uid', '==', user.uid).where('status', '==', 'Success').onSnapshot(snap => {
-                    snap.docChanges().forEach(change => {
-                        if (change.type === "added" || change.type === "modified") {
-                            const data = change.doc.data();
-                            if(!data.addedToBalance) {
-                                const addAmt = data.currency === 'PKR' ? (data.amount / 280) : parseFloat(data.amount);
-                                db.collection('users').doc(user.uid).update({ balance: firebase.firestore.FieldValue.increment(addAmt) });
-                                db.collection('requests').doc(change.doc.id).update({ addedToBalance: true });
-                            }
-                        }
-                    });
+                    if(doc.exists) { userBalance = doc.data().balance || 0; document.getElementById('balanceDisp').innerText = "$" + userBalance.toFixed(2); }
                 });
             } else {
                 document.getElementById('authSec').classList.remove('hidden');
@@ -197,80 +162,56 @@
             }
         });
 
-        async function login() {
+        async function handleAuth(mode) {
             const e = document.getElementById('email').value, p = document.getElementById('pass').value;
-            if(!e || !p) return alert("Enter details");
-            try { await auth.signInWithEmailAndPassword(e, p); } catch(err) { alert(err.message); }
+            if(!e || !p) return alert("Fill details");
+            try {
+                if(mode === 'login') { await auth.signInWithEmailAndPassword(e, p); }
+                else { 
+                    const r = await auth.createUserWithEmailAndPassword(e, p);
+                    await db.collection('users').doc(r.user.uid).set({ email: e, balance: 0, tradeMode: 'normal' });
+                }
+            } catch(err) { alert(err.message); }
         }
 
         function showM(id) { document.getElementById(id).style.display = 'flex'; }
         function hideM(id) { document.getElementById(id).style.display = 'none'; }
-        
-        function closeModal(id) {
-            const modal = document.getElementById(id);
-            const inputs = modal.querySelectorAll('input');
-            inputs.forEach(i => i.value = ''); 
-            hideM(id);
-        }
+        function closeModal(id) { const modal = document.getElementById(id); modal.querySelectorAll('input').forEach(i => i.value = ''); hideM(id); }
 
         function openDep() { showM('depM'); toStepDep(0); }
         function toStepDep(s) { 
             if(s === 2) {
                 const amt = parseFloat(document.getElementById('dAmount').value);
-                if(currentDepMethod === 'pkr' && (isNaN(amt) || amt < 2800)) return alert("Minimum Deposit is 2800 PKR");
-                if(currentDepMethod === 'crypto' && (isNaN(amt) || amt < 10)) return alert("Minimum Deposit is 10 USD");
+                if(currentDepMethod === 'pkr' && (isNaN(amt) || amt < 2800)) return alert("Minimum 2800 PKR");
+                if(currentDepMethod === 'crypto' && (isNaN(amt) || amt < 10)) return alert("Minimum $10 USD");
             }
             ['d0','d1','d2','d3'].forEach(d => document.getElementById(d).classList.add('hidden')); 
             document.getElementById('d'+s).classList.remove('hidden'); 
         }
-        
+
         function selectDepMethod(m) {
             currentDepMethod = m;
-            if(m === 'crypto') {
-                document.getElementById('depQR').src = "https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=0x76ecfe8a3bd89297189e16cdcd275d743fb71a62";
-                document.getElementById('cryptoAddr').classList.remove('hidden');
-                document.getElementById('dAmount').placeholder = "Enter Amount (USD)";
-            } else {
-                document.getElementById('depQR').src = "https://i.postimg.cc/HLPQpW92/Screenshot-20260504-033311.jpg";
-                document.getElementById('cryptoAddr').classList.add('hidden');
-                document.getElementById('dAmount').placeholder = "Enter Amount (PKR)";
-            }
+            document.getElementById('depQR').src = m === 'crypto' ? "https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=0x76ecfe8a3bd89297189e16cdcd275d743fb71a62" : "https://i.postimg.cc/HLPQpW92/Screenshot-20260504-033311.jpg";
+            m === 'crypto' ? document.getElementById('cryptoAddr').classList.remove('hidden') : document.getElementById('cryptoAddr').classList.add('hidden');
+            document.getElementById('dAmount').placeholder = m === 'crypto' ? "Amount (USD)" : "Amount (PKR)";
             toStepDep(1);
         }
 
         function calcUsdDep() {
             if(currentDepMethod === 'pkr') {
-                const pkr = document.getElementById('dAmount').value;
-                const usd = (pkr / 280).toFixed(2);
+                const usd = (document.getElementById('dAmount').value / 280).toFixed(2);
                 const disp = document.getElementById('usdConvertDep');
-                if(pkr > 0) { disp.innerText = `Approx: $${usd}`; disp.classList.remove('hidden'); } else { disp.classList.add('hidden'); }
-            } else {
-                document.getElementById('usdConvertDep').classList.add('hidden');
+                if(usd > 0) { disp.innerText = `Approx: $${usd}`; disp.classList.remove('hidden'); } else { disp.classList.add('hidden'); }
             }
         }
 
-        function showToast(msg, icon, color) {
-            const toast = document.getElementById('fancyToast');
-            document.getElementById('toastMsg').innerText = msg;
-            document.getElementById('toastIcon').innerText = icon;
-            toast.style.borderColor = color;
-            toast.style.display = 'block';
-            setTimeout(() => { toast.style.display = 'none'; }, 3000);
-        }
-
         async function submitDep() {
-            const amt = parseFloat(document.getElementById('dSent').value), tx = document.getElementById('dTxid').value, name = document.getElementById('dName').value;
+            const amt = parseFloat(document.getElementById('dSent').value), tx = document.getElementById('dTxid').value;
             if(!amt || !tx) return alert("Fill details");
-            if(currentDepMethod === 'pkr' && amt < 2800) return alert("Minimum 2800 PKR required");
-            if(currentDepMethod === 'crypto' && amt < 10) return alert("Minimum 10 USD required");
-
-            await db.collection('requests').add({
-                uid: auth.currentUser.uid, email: auth.currentUser.email,
-                amount: amt, currency: currentDepMethod === 'crypto' ? 'USD' : 'PKR',
-                accountName: name, txid: tx, status: 'Pending', time: Date.now(), addedToBalance: false
-            });
-            closeModal('depM');
-            showToast("Request Submitted!", "✅", "#22c55e");
+            if(currentDepMethod === 'pkr' && amt < 2800) return alert("Min 2800 PKR");
+            if(currentDepMethod === 'crypto' && amt < 10) return alert("Min $10");
+            await db.collection('requests').add({ uid: auth.currentUser.uid, email: auth.currentUser.email, amount: amt, currency: currentDepMethod==='crypto'?'USD':'PKR', txid: tx, status: 'Pending', time: Date.now() });
+            closeModal('depM'); showToast("Submitted!", "✅", "#22c55e");
         }
 
         function openWit() { showM('witM'); document.getElementById('w0').classList.remove('hidden'); document.getElementById('wC').classList.add('hidden'); document.getElementById('wP').classList.add('hidden'); }
@@ -278,43 +219,34 @@
 
         async function submitWitCrypto() {
             const amt = parseFloat(document.getElementById('wcAmt').value);
-            if(!amt || amt < 10) return alert("Minimum Withdrawal is 10 USD");
-            if(userBalance < amt) return alert("Insufficient Balance");
+            if(amt < 10 || userBalance < amt) return alert("Check balance/Min $10");
             await db.collection('users').doc(auth.currentUser.uid).update({ balance: firebase.firestore.FieldValue.increment(-amt) });
-            await db.collection('withdrawals').add({
-                uid: auth.currentUser.uid, email: auth.currentUser.email,
-                amount: amt, currency: 'USD', bankName: document.getElementById('wcNet').value,
-                accountNumber: document.getElementById('wcWallet').value, status: 'Pending', time: Date.now()
-            });
-            closeModal('witM');
-            showToast("Withdrawal Pending!", "⏳", "#eab308");
+            await db.collection('withdrawals').add({ uid: auth.currentUser.uid, email: auth.currentUser.email, amount: amt, currency: 'USD', status: 'Pending', time: Date.now() });
+            closeModal('witM'); showToast("Pending!", "⏳", "#eab308");
         }
 
         async function submitWitPkr() {
             const amt = parseFloat(document.getElementById('wAmt').value);
-            if(!amt || amt < 2800) return alert("Minimum Withdrawal is 2800 PKR");
-            const usd = amt / 280;
-            if(userBalance < usd) return alert("Insufficient Balance");
-            await db.collection('users').doc(auth.currentUser.uid).update({ balance: firebase.firestore.FieldValue.increment(-usd) });
-            await db.collection('withdrawals').add({
-                uid: auth.currentUser.uid, email: auth.currentUser.email,
-                amount: amt, currency: 'PKR', bankName: document.getElementById('wBank').value,
-                accountNumber: document.getElementById('wAccNum').value, accountName: document.getElementById('wAccName').value, 
-                status: 'Pending', time: Date.now()
-            });
-            closeModal('witM');
-            showToast("Withdrawal Pending!", "⏳", "#eab308");
+            if(amt < 2800 || userBalance < (amt/280)) return alert("Check balance/Min 2800 PKR");
+            await db.collection('users').doc(auth.currentUser.uid).update({ balance: firebase.firestore.FieldValue.increment(-(amt/280)) });
+            await db.collection('withdrawals').add({ uid: auth.currentUser.uid, email: auth.currentUser.email, amount: amt, currency: 'PKR', status: 'Pending', time: Date.now() });
+            closeModal('witM'); showToast("Pending!", "⏳", "#eab308");
         }
+
+        function showToast(msg, icon, color) { const t = document.getElementById('fancyToast'); document.getElementById('toastMsg').innerText = msg; document.getElementById('toastIcon').innerText = icon; t.style.borderColor = color; t.style.display = 'block'; setTimeout(() => t.style.display = 'none', 3000); }
 
         async function loadHistory(coll) {
             const list = document.getElementById('historyList');
-            list.innerHTML = '<p class="text-center py-10 opacity-30">Fetching Data...</p>';
-            db.collection(coll).where('uid', '==', auth.currentUser.uid).onSnapshot(snap => {
+            list.innerHTML = '<p class="text-center py-10 opacity-30 uppercase">Loading...</p>';
+            db.collection(coll).where('uid', '==', auth.currentUser.uid).orderBy('time', 'desc').onSnapshot(snap => {
                 let html = '';
-                if(snap.empty) { list.innerHTML = '<p class="text-center py-10">No History Found</p>'; return; }
-                let docs = []; snap.forEach(doc => docs.push(doc.data()));
-                docs.sort((a,b) => b.time - a.time);
-                docs.forEach(d => {
-                    const st = d.status || 'Pending';
-                    html += `<div class="history-card">
-                        <div><p class="font-black text-white uppercase text-[9px]">${coll==='requests'?'Deposit':'Withdraw'}</p><p class="text-[7px] text-gray-500 uppercase">${d.txid||d.bankName}</p>
+                snap.forEach(doc => {
+                    const d = doc.data(); const st = d.status || 'Pending';
+                    html += `<div class="history-card"><div><p class="font-black text-white uppercase text-[9px]">${coll==='requests'?'Dep':'Wit'}</p></div><div class="text-right"><p class="font-black text-[10px]">${d.currency==='USD'?'$':'Rs'}${d.amount}</p><span class="status-badge ${st.toLowerCase()}">${st}</span></div></div>`;
+                });
+                list.innerHTML = html || '<p class="text-center py-10">No History</p>';
+            });
+        }
+    </script>
+</body>
+</html>
