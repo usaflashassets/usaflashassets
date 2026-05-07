@@ -35,29 +35,34 @@
     </div>
 
     <div id="dashboard" class="hidden p-6 max-w-md mx-auto">
-        <header class="flex justify-between items-center py-8">
-            <div class="flex items-center gap-4">
-                <div onclick="showM('profileM')" class="w-12 h-12 rounded-2xl bg-yellow-500 flex items-center justify-center text-xl cursor-pointer">👤</div>
-                <div>
-                    <h2 id="balanceDisp" class="text-3xl font-black text-white">$0.00</h2>
-                    <p class="text-[9px] text-gray-500 font-bold uppercase">Total Balance</p>
-                </div>
+        <header class="flex flex-col items-center py-12">
+            <div onclick="showM('profileM')" class="w-20 h-20 rounded-[30px] bg-yellow-500 flex items-center justify-center text-3xl cursor-pointer mb-6 shadow-xl shadow-yellow-500/20">👤</div>
+            <p class="text-[10px] text-gray-500 font-bold uppercase tracking-widest mb-1">Available Balance</p>
+            <h2 id="balanceDisp" class="text-5xl font-black text-white mb-10">$0.00</h2>
+            
+            <div class="grid grid-cols-2 gap-4 w-full">
+                <button onclick="openDep()" class="py-5 bg-white text-black rounded-3xl text-xs font-black uppercase tracking-tighter">Deposit Funds</button>
+                <button onclick="openWit()" class="py-5 bg-red-600 text-white rounded-3xl text-xs font-black uppercase tracking-tighter">Withdraw</button>
             </div>
-            <div class="flex gap-2">
-                <button onclick="openDep()" class="bg-white text-black px-4 py-2 rounded-xl text-[10px] font-black uppercase">Deposit</button>
-                <button onclick="openWit()" class="bg-red-500 text-white px-4 py-2 rounded-xl text-[10px] font-black uppercase">Withdraw</button>
-            </div>
-        </header>
 
-        <div class="mt-10">
-            <div class="flex justify-between items-center mb-6">
-                <h3 class="text-[11px] font-black text-white uppercase italic tracking-widest">History</h3>
-                <div class="flex gap-4">
-                    <button onclick="loadHistory('requests')" class="text-[10px] font-bold text-green-500 uppercase">Deposits</button>
-                    <button onclick="loadHistory('withdrawals')" class="text-[10px] font-bold text-red-500 uppercase">Withdraws</button>
-                </div>
+            <button onclick="showM('histM')" class="w-full mt-4 py-5 border border-white/10 bg-white/5 text-gray-400 rounded-3xl text-xs font-black uppercase tracking-tighter">Transaction History</button>
+        </header>
+    </div>
+
+    <div id="histM" class="modal">
+        <div class="glass p-8 rounded-[40px] w-full max-w-md h-[80vh] flex flex-col">
+            <h2 class="text-sm font-black text-center mb-6 uppercase italic tracking-widest">Activity Logs</h2>
+            
+            <div class="flex gap-2 mb-6">
+                <button onclick="loadHistory('requests')" class="flex-1 py-3 bg-green-500/10 text-green-500 rounded-xl text-[10px] font-black uppercase">Deposit History</button>
+                <button onclick="loadHistory('withdrawals')" class="flex-1 py-3 bg-red-500/10 text-red-500 rounded-xl text-[10px] font-black uppercase">Withdraw History</button>
             </div>
-            <div id="historyList"></div>
+
+            <div id="historyList" class="flex-grow overflow-y-auto pr-2 custom-scroll">
+                <p class="text-center py-10 text-[10px] text-gray-600 uppercase font-bold">Select a category above</p>
+            </div>
+
+            <button onclick="hideM('histM')" class="w-full mt-6 py-4 border border-white/10 text-[10px] font-bold text-gray-500 uppercase rounded-2xl">Back to Dashboard</button>
         </div>
     </div>
 
@@ -135,7 +140,6 @@
     </div>
 
     <script>
-        // Firebase Configuration
         const firebaseConfig = { 
             apiKey: "AIzaSyAySRA1YSpTpmC8WjnKmDhnNMHkEmkeP50", 
             authDomain: "waqas-47f30.firebaseapp.com", 
@@ -156,7 +160,6 @@
                 document.getElementById('dashboard').classList.remove('hidden');
                 document.getElementById('uEmail').innerText = user.email;
                 
-                // Real-time Balance & Balance Add Logic
                 db.collection('users').doc(user.uid).onSnapshot(doc => {
                     if(doc.exists) {
                         userBalance = doc.data().balance || 0;
@@ -164,7 +167,6 @@
                     }
                 });
 
-                // Status Checker for auto-adding balance
                 db.collection('requests').where('uid', '==', user.uid).where('status', '==', 'Success').onSnapshot(snap => {
                     snap.docChanges().forEach(change => {
                         if (change.type === "added" || change.type === "modified") {
@@ -177,7 +179,6 @@
                         }
                     });
                 });
-                loadHistory('requests');
             } else {
                 document.getElementById('authSec').classList.remove('hidden');
                 document.getElementById('dashboard').classList.add('hidden');
@@ -192,7 +193,6 @@
         function showM(id) { document.getElementById(id).style.display = 'flex'; }
         function hideM(id) { document.getElementById(id).style.display = 'none'; }
 
-        // DEPOSIT LOGIC
         function openDep() { showM('depM'); toStepDep(0); }
         function toStepDep(s) { ['d0','d1','d2','d3'].forEach(d => document.getElementById(d).classList.add('hidden')); document.getElementById('d'+s).classList.remove('hidden'); }
         
@@ -231,7 +231,6 @@
             alert("Deposit Request Sent!"); hideM('depM');
         }
 
-        // WITHDRAW LOGIC
         function openWit() { showM('witM'); document.getElementById('w0').classList.remove('hidden'); document.getElementById('wC').classList.add('hidden'); document.getElementById('wP').classList.add('hidden'); }
         function selectWitMethod(m) { document.getElementById('w0').classList.add('hidden'); if(m === 'crypto') document.getElementById('wC').classList.remove('hidden'); else document.getElementById('wP').classList.remove('hidden'); }
 
@@ -240,7 +239,6 @@
             const wallet = document.getElementById('wcWallet').value;
             if(!amt || !wallet) return alert("Fill all details");
             if(userBalance < amt) return alert("Insufficient Balance");
-
             await db.collection('users').doc(auth.currentUser.uid).update({ balance: firebase.firestore.FieldValue.increment(-amt) });
             await db.collection('withdrawals').add({
                 uid: auth.currentUser.uid, email: auth.currentUser.email,
@@ -255,7 +253,6 @@
             const pkrToUsd = amt / 280;
             if(!amt || !document.getElementById('wAccNum').value) return alert("Fill all details");
             if(userBalance < pkrToUsd) return alert("Insufficient Balance");
-
             await db.collection('users').doc(auth.currentUser.uid).update({ balance: firebase.firestore.FieldValue.increment(-pkrToUsd) });
             await db.collection('withdrawals').add({
                 uid: auth.currentUser.uid, email: auth.currentUser.email,
@@ -266,13 +263,12 @@
             alert("Withdrawal Request Submitted!"); hideM('witM');
         }
 
-        // HISTORY SYSTEM
         async function loadHistory(coll) {
             const list = document.getElementById('historyList');
-            list.innerHTML = '<p class="text-center py-10 text-[10px] text-gray-500">LOADING...</p>';
+            list.innerHTML = '<p class="text-center py-10 text-[10px] text-gray-500">FETCHING...</p>';
             db.collection(coll).where('uid', '==', auth.currentUser.uid).onSnapshot(snap => {
                 let html = '';
-                if(snap.empty) { list.innerHTML = '<p class="text-center py-10 text-gray-700 text-[10px]">NO RECORDS FOUND</p>'; return; }
+                if(snap.empty) { list.innerHTML = '<p class="text-center py-10 text-gray-700 text-[10px]">NO ACTIVITY FOUND</p>'; return; }
                 let docs = [];
                 snap.forEach(doc => docs.push(doc.data()));
                 docs.sort((a,b) => b.time - a.time);
