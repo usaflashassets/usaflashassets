@@ -14,25 +14,8 @@
         .glass { background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,0.05); }
         .auth-input { background: #0f172a; border: 1px solid #1e293b; padding: 10px; border-radius: 10px; width: 100%; color: white; outline: none; font-size: 16px; }
         .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.98); z-index: 1000; align-items: center; justify-content: center; padding: 15px; }
-        
-        /* Persistent UI Handling */
-        .page-sec { display: none; }
-
         #fancyToast { display: none; position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 2000; padding: 15px 25px; border-radius: 20px; text-align: center; border: 1px solid; animation: slideDown 0.5s ease forwards; width: 80%; max-width: 300px; }
         @keyframes slideDown { from { top: -100px; opacity: 0; } to { top: 20px; opacity: 1; } }
-        
-        /* Professional Profile Icon */
-        .prof-icon { 
-            width: 42px; height: 42px; border-radius: 14px; 
-            background: linear-gradient(145deg, #facc15, #ca8a04);
-            display: flex; align-items: center; justify-content: center;
-            box-shadow: 0 4px 15px rgba(234, 179, 8, 0.2);
-            border: 2px solid rgba(255,255,255,0.1);
-            transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            cursor: pointer;
-        }
-        .prof-icon:active { transform: scale(0.9); }
-
         .history-card { background: #0a0f1d; border-radius: 12px; padding: 10px; margin-bottom: 8px; border: 1px solid rgba(255,255,255,0.03); display: flex; justify-content: space-between; align-items: center; }
         .status-badge { padding: 2px 8px; border-radius: 50px; font-size: 8px; font-weight: 800; text-transform: uppercase; }
         .pending { background: rgba(234, 179, 8, 0.1); color: #eab308; }
@@ -47,6 +30,7 @@
             transition: 0.3s; 
             background: linear-gradient(135deg, #facc15 0%, #ca8a04 100%);
         }
+        .trade-btn-glow:hover { transform: scale(1.02); box-shadow: 0 0 30px rgba(234, 179, 8, 0.6); }
     </style>
 </head>
 <body>
@@ -56,7 +40,7 @@
         <div id="toastMsg" class="text-xs font-black uppercase tracking-widest text-white"></div>
     </div>
 
-    <div id="authSec" class="page-sec flex items-center justify-center min-h-screen p-6">
+    <div id="authSec" class="hidden flex items-center justify-center min-h-screen p-6">
         <div class="glass w-full max-w-xs p-8 rounded-[25px] text-center shadow-2xl">
             <h1 class="text-xl font-black text-white italic uppercase mb-6 tracking-tighter">Dubai Live Trade</h1>
             <input type="email" id="email" placeholder="Email Address" class="auth-input mb-3">
@@ -65,12 +49,10 @@
         </div>
     </div>
 
-    <div id="dashboard" class="page-sec p-4">
+    <div id="dashboard" class="hidden p-4">
         <header class="flex justify-between items-center py-4 mb-8">
             <div class="flex items-center gap-3">
-                <div onclick="showM('profileM')" class="prof-icon">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-                </div>
+                <div onclick="showM('profileM')" class="w-10 h-10 rounded-xl bg-yellow-500 flex items-center justify-center text-xl cursor-pointer shadow-lg shadow-yellow-500/20">👤</div>
                 <div>
                     <p class="text-[8px] text-gray-500 font-bold uppercase leading-none mb-1">Total Balance</p>
                     <h2 id="balanceDisp" class="text-xl font-black text-white leading-none tracking-tight">$0.00</h2>
@@ -106,7 +88,9 @@
                 <button onclick="loadHistory('requests')" class="flex-1 py-2 bg-green-500/10 text-green-500 rounded-lg text-[8px] font-black uppercase">Deposits</button>
                 <button onclick="loadHistory('withdrawals')" class="flex-1 py-2 bg-red-500/10 text-red-500 rounded-lg text-[8px] font-black uppercase">Withdraws</button>
             </div>
-            <div id="historyList" class="flex-grow overflow-y-auto pr-1 text-[9px]"></div>
+            <div id="historyList" class="flex-grow overflow-y-auto pr-1 text-[9px]">
+                <p class="text-center py-10 opacity-30 font-bold uppercase text-[8px]">Select Category</p>
+            </div>
             <button onclick="hideM('histM')" class="w-full mt-4 py-3 border border-white/10 text-[9px] font-bold text-gray-500 uppercase rounded-xl">Back</button>
         </div>
     </div>
@@ -164,11 +148,8 @@
 
     <div id="profileM" class="modal">
         <div class="glass p-6 rounded-[25px] w-full max-w-xs text-center">
-            <div class="w-16 h-16 bg-yellow-500/10 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-yellow-500/20 shadow-lg">
-                <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#eab308" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-            </div>
-            <p id="uEmail" class="text-white font-bold text-[10px] mb-6 opacity-70 italic"></p>
-            <button onclick="auth.signOut().then(()=>location.reload())" class="w-full py-3 bg-red-600/10 text-red-600 rounded-xl font-black uppercase text-[9px]">Logout Securely</button>
+            <p id="uEmail" class="text-white font-bold text-[10px] mb-4 opacity-70"></p>
+            <button onclick="auth.signOut().then(()=>location.reload())" class="w-full py-3 bg-red-600/10 text-red-600 rounded-xl font-black uppercase text-[9px]">Logout</button>
             <button onclick="hideM('profileM')" class="mt-4 text-[9px] text-gray-600 font-bold uppercase">Close</button>
         </div>
     </div>
@@ -178,7 +159,7 @@
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth(), db = firebase.firestore();
 
-        // Local Persistence: Yeh user ko login rakhega refresh ke baad bhi
+        // Persistence already set to LOCAL (Perfect)
         auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
 
         let currentDepMethod = '', userBalance = 0;
@@ -192,17 +173,19 @@
             setTimeout(() => t.style.display = 'none', 3500); 
         }
 
-        // SMART UI SWITCH: Refresh par login page nahi dikhayega agar logged in hai
+        // Logic fix: Refresh handling
         auth.onAuthStateChanged(user => {
-            document.querySelectorAll('.page-sec').forEach(s => s.style.display = 'none');
             if(user) {
-                document.getElementById('dashboard').style.display = 'block';
+                document.getElementById('authSec').classList.add('hidden');
+                document.getElementById('dashboard').classList.remove('hidden');
                 document.getElementById('uEmail').innerText = user.email;
                 db.collection('users').doc(user.uid).onSnapshot(doc => {
                     if(doc.exists) { userBalance = doc.data().balance || 0; document.getElementById('balanceDisp').innerText = "$" + userBalance.toFixed(2); }
                 });
             } else {
-                document.getElementById('authSec').style.display = 'flex';
+                // Only show login if Firebase confirms no user is logged in
+                document.getElementById('authSec').classList.remove('hidden');
+                document.getElementById('dashboard').classList.add('hidden');
             }
         });
 
@@ -211,8 +194,8 @@
             if(!e || !p) return showToast("Fill Details", "⚠️", "#eab308");
             try {
                 await auth.signInWithEmailAndPassword(e, p);
-                showToast("Welcome Back", "👤", "#22c55e");
-            } catch(err) { showToast("Invalid Details", "❌", "#ef4444"); }
+                showToast("Logged In", "👤", "#22c55e");
+            } catch(err) { showToast(err.message, "❌", "#ef4444"); }
         }
 
         function showM(id) { document.getElementById(id).style.display = 'flex'; }
@@ -249,9 +232,11 @@
         async function submitDep() {
             const amt = parseFloat(document.getElementById('dSent').value), tx = document.getElementById('dTxid').value;
             if(!amt || !tx) return showToast("Fill Details", "⚠️", "#ef4444");
+            if(currentDepMethod === 'pkr' && amt < 2800) return showToast("Min 2800 PKR", "⚠️", "#ef4444");
+            if(currentDepMethod === 'crypto' && amt < 10) return showToast("Min $10 USD", "⚠️", "#ef4444");
             await db.collection('requests').add({ uid: auth.currentUser.uid, email: auth.currentUser.email, amount: amt, currency: currentDepMethod==='crypto'?'USD':'PKR', txid: tx, status: 'Pending', time: Date.now() });
             closeModal('depM'); 
-            showToast("Deposit Submitted", "🚀", "#22c55e");
+            showToast("Deposit Submitted!", "🚀", "#22c55e");
         }
 
         function openWit() { showM('witM'); document.getElementById('w0').classList.remove('hidden'); document.getElementById('wC').classList.add('hidden'); document.getElementById('wP').classList.add('hidden'); }
@@ -292,4 +277,14 @@
                     html += `<div class="history-card">
                         <div class="flex items-center gap-2">
                             <span class="opacity-50">${icon}</span>
-                   
+                            <div><p class="font-black text-white uppercase text-[9px]">${coll==='requests'?'Dep':'Wit'}</p><p class="text-[7px] text-gray-500 uppercase">${d.currency}</p></div>
+                        </div>
+                        <div class="text-right"><p class="font-black text-[10px] ${coll==='requests'?'text-green-500':'text-red-500'}">${d.currency==='USD'?'$':'Rs'}${d.amount}</p><span class="status-badge ${st.toLowerCase()}">${st}</span></div>
+                    </div>`;
+                });
+                list.innerHTML = html || '<p class="text-center py-10 text-[8px] opacity-20">EMPTY HISTORY</p>';
+            });
+        }
+    </script>
+</body>
+</html>
