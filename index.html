@@ -2,196 +2,162 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trader Waqas - Official Links</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Partner Portal | Dubai Live Trade</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --primary-bg: #050505;
-            --card-bg: rgba(255, 255, 255, 0.05);
-            --accent-blue: #0088cc;
-            --accent-green: #25D366;
-            --text-main: #ffffff;
-            --text-dim: #a0a0a0;
-        }
-
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: 'Inter', sans-serif;
-            background-color: var(--primary-bg);
-            background-image: 
-                radial-gradient(circle at top right, rgba(0, 136, 204, 0.15), transparent 300px),
-                radial-gradient(circle at bottom left, rgba(37, 211, 102, 0.05), transparent 300px);
-            color: var(--text-main);
-            display: flex;
-            justify-content: center;
-            min-height: 100vh;
-            padding: 40px 20px;
-        }
-
-        .container {
-            width: 100%;
-            max-width: 400px;
-            text-align: center;
-            animation: slideUp 0.6s ease-out;
-        }
-
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .brand-name {
-            font-size: 26px;
-            font-weight: 800;
-            letter-spacing: -0.5px;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            text-transform: uppercase;
-        }
-
-        .verified-badge {
-            color: var(--accent-blue);
-            font-size: 20px;
-        }
-
-        .bio-card {
-            font-size: 14px;
-            color: var(--text-dim);
-            margin-bottom: 30px;
-            line-height: 1.6;
-            background: var(--card-bg);
-            padding: 22px;
-            border-radius: 24px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(12px);
-        }
-
-        .bio-card b {
-            color: #fff;
-            display: block;
-            margin-bottom: 6px;
-            font-size: 15px;
-        }
-
-        .link-item {
-            display: flex;
-            align-items: center;
-            background: var(--card-bg);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            padding: 16px;
-            margin-bottom: 14px;
-            border-radius: 18px;
-            text-decoration: none;
-            color: white;
-            transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
-        }
-
-        .link-item:hover {
-            background: rgba(255, 255, 255, 0.1);
-            transform: scale(1.03);
-            border-color: rgba(255, 255, 255, 0.2);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
-        }
-
-        .icon-circle {
-            width: 46px;
-            height: 46px;
-            border-radius: 12px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-right: 15px;
-            font-size: 20px;
-            flex-shrink: 0;
-        }
-
-        .tg-bg { background: linear-gradient(135deg, #0088cc, #005580); }
-        .wa-bg { background: linear-gradient(135deg, #25D366, #128C7E); }
-
-        .text-area {
-            text-align: left;
-        }
-
-        .main-text {
-            display: block;
-            font-weight: 600;
-            font-size: 16px;
-        }
-
-        .sub-text {
-            font-size: 11px;
-            color: var(--text-dim);
-            font-weight: 400;
-        }
-
-        .arrow-icon {
-            margin-left: auto;
-            color: rgba(255, 255, 255, 0.2);
-            font-size: 12px;
-        }
-
-        footer {
-            margin-top: 40px;
-            font-size: 10px;
-            color: #444;
-            text-transform: uppercase;
-            letter-spacing: 4px;
-        }
+        body { background: #05070a; color: #e2e8f0; font-family: 'Plus Jakarta Sans', sans-serif; }
+        .glass-card { background: rgba(17, 24, 39, 0.8); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.05); }
+        .stat-card { background: linear-gradient(145deg, #0f172a 0%, #020617 100%); border: 1px solid rgba(255,255,255,0.03); }
+        .auth-input { background: #1a1f29; border: 1px solid #2d3748; padding: 14px; border-radius: 12px; width: 100%; color: white; outline: none; }
+        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 100; align-items: center; justify-content: center; }
     </style>
 </head>
-<body>
+<body class="min-h-screen">
 
-<div class="container">
-    <h1 class="brand-name">Trader Waqas <i class="fas fa-check-circle verified-badge"></i></h1>
-    
-    <div class="bio-card">
-        <b>OFFICIAL TRADING HUB</b>
-        🚀 10+ Daily SureShot Binary Signals <br>
-        💸 Mere sath trade karne ke liye link par click karein <br>
-        🔥 Start Your Profit Journey Today
+    <div id="loader" class="fixed inset-0 bg-[#05070a] z-[999] flex items-center justify-center">
+        <div class="w-10 h-10 border-4 border-yellow-500 border-t-transparent rounded-full animate-spin"></div>
     </div>
 
-    <a href="tg://resolve?domain=traderwaqas08" class="link-item">
-        <div class="icon-circle tg-bg">
-            <i class="fab fa-telegram-plane"></i>
+    <div id="authSection" class="hidden min-h-screen flex items-center justify-center p-4">
+        <div class="glass-card w-full max-w-md p-8 rounded-[32px]">
+            <h1 class="text-3xl font-black text-center mb-2 uppercase italic">Partner Portal</h1>
+            <p class="text-gray-500 text-center text-xs mb-8 font-bold uppercase tracking-widest">Affiliate Program</p>
+            
+            <div id="authInputs">
+                <input type="email" id="email" placeholder="Email" class="auth-input mb-4">
+                <input type="password" id="pass" placeholder="Password" class="auth-input mb-6">
+                <button onclick="handleAuth('login')" class="w-full py-4 bg-yellow-500 text-black font-black rounded-2xl uppercase mb-3">Login</button>
+                <button onclick="handleAuth('reg')" class="w-full py-4 border border-white/10 text-white font-black rounded-2xl uppercase">Register as Partner</button>
+            </div>
         </div>
-        <div class="text-area">
-            <span class="main-text">Join Free Channel</span>
-            <span class="sub-text">Direct App Open (No VPN Required)</span>
-        </div>
-        <i class="fas fa-chevron-right arrow-icon"></i>
-    </a>
+    </div>
 
-    <a href="tg://resolve?domain=traderwaqas8" class="link-item">
-        <div class="icon-circle tg-bg">
-            <i class="fas fa-user-shield"></i>
-        </div>
-        <div class="text-area">
-            <span class="main-text">Telegram Personal ID</span>
-            <span class="sub-text">For VIP Access & Fast Support</span>
-        </div>
-        <i class="fas fa-chevron-right arrow-icon"></i>
-    </a>
+    <div id="dashboard" class="hidden p-6 max-w-4xl mx-auto">
+        <header class="flex justify-between items-center mb-10">
+            <h2 class="text-xl font-black uppercase italic tracking-tighter">Affiliate <span class="text-yellow-500">Center</span></h2>
+            <div onclick="showModal('profileM')" class="w-10 h-10 bg-yellow-500 rounded-full flex items-center justify-center text-black font-black cursor-pointer shadow-lg shadow-yellow-500/20">A</div>
+        </header>
 
-    <a href="https://wa.me/923248441073" class="link-item">
-        <div class="icon-circle wa-bg">
-            <i class="fab fa-whatsapp"></i>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+            <div class="stat-card p-5 rounded-3xl">
+                <p class="text-[9px] font-bold text-gray-500 uppercase mb-1">Total Clicks</p>
+                <h3 id="statClicks" class="text-2xl font-black">0</h3>
+            </div>
+            <div class="stat-card p-5 rounded-3xl">
+                <p class="text-[9px] font-bold text-gray-500 uppercase mb-1">Joined Users</p>
+                <h3 id="statUsers" class="text-2xl font-black">0</h3>
+            </div>
+            <div class="stat-card p-5 rounded-3xl border-yellow-500/10">
+                <p class="text-[9px] font-bold text-yellow-500 uppercase mb-1">Commission</p>
+                <h3 id="statComm" class="text-2xl font-black text-yellow-500">$0.00</h3>
+            </div>
+            <div class="stat-card p-5 rounded-3xl">
+                <p class="text-[9px] font-bold text-gray-500 uppercase mb-1">Total Deposits</p>
+                <h3 id="statDepAmt" class="text-2xl font-black">PKR 0</h3>
+            </div>
         </div>
-        <div class="text-area">
-            <span class="main-text">WhatsApp Contact</span>
-            <span class="sub-text">Direct Chat: 0324 8441073</span>
+
+        <div class="glass-card p-8 rounded-[40px] text-center">
+            <h3 class="text-lg font-black mb-2">Promote Your Link</h3>
+            <p class="text-gray-500 text-[10px] uppercase font-bold mb-6">Earn 40% commission on every user deposit</p>
+            
+            <div id="linkBox" class="hidden bg-black/50 p-4 rounded-2xl border border-white/5 mb-6 break-all font-mono text-xs text-yellow-500">
+                https://yourdomain.com/index.html?ref=<span id="refIDDisplay">...</span>
+            </div>
+
+            <button id="genBtn" onclick="generateLink()" class="w-full py-4 bg-white text-black font-black rounded-2xl uppercase text-xs tracking-widest shadow-xl shadow-white/5">Generate Referral Link</button>
+            <button id="copyBtn" onclick="copyLink()" class="hidden w-full py-4 bg-blue-600 text-white font-black rounded-2xl uppercase text-xs tracking-widest">Copy Link</button>
         </div>
-        <i class="fas fa-chevron-right arrow-icon"></i>
-    </a>
+    </div>
 
-    <footer>Verified Official Profile</footer>
-</div>
+    <div id="profileM" class="modal">
+        <div class="glass-card p-8 rounded-[35px] w-full max-w-xs text-center relative">
+            <button onclick="hideModal('profileM')" class="absolute top-4 right-4 text-gray-500">&times;</button>
+            <div class="w-20 h-20 bg-yellow-500 rounded-full mx-auto flex items-center justify-center text-3xl font-black text-black mb-4 shadow-xl shadow-yellow-500/20">A</div>
+            <p id="userEmail" class="text-white font-bold italic mb-8">...</p>
+            <button onclick="auth.signOut().then(()=>location.reload())" class="w-full py-4 bg-red-600 text-white font-black rounded-2xl uppercase text-[10px]">Logout Account</button>
+        </div>
+    </div>
 
+    <script>
+        // Use your existing Firebase Config
+        const firebaseConfig = { 
+            apiKey: "AIzaSyAySRA1YSpTpmC8WjnKmDhnNMHkEmkeP50", 
+            authDomain: "waqas-47f30.firebaseapp.com", 
+            projectId: "waqas-47f30", 
+            storageBucket: "waqas-47f30.appspot.com", 
+            messagingSenderId: "374104279093", 
+            appId: "1:374104279093:web:6e1844b60456c700940364" 
+        };
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth(), db = firebase.firestore();
+
+        auth.onAuthStateChanged(user => {
+            document.getElementById('loader').style.display = 'none';
+            if(user) {
+                showDashboard(user);
+            } else {
+                document.getElementById('authSection').style.display = 'flex';
+                document.getElementById('dashboard').style.display = 'none';
+            }
+        });
+
+        async function handleAuth(type) {
+            const e = document.getElementById('email').value, p = document.getElementById('pass').value;
+            if(!e || !p) return alert("Fill all fields");
+            try {
+                if(type === 'reg') {
+                    const r = await auth.createUserWithEmailAndPassword(e, p);
+                    await db.collection('affiliates').doc(r.user.uid).set({
+                        email: e,
+                        clicks: 0,
+                        totalUsers: 0,
+                        totalCommission: 0,
+                        totalDepositsPKR: 0,
+                        refID: Math.random().toString(36).substring(2, 8).toUpperCase()
+                    });
+                } else {
+                    await auth.signInWithEmailAndPassword(e, p);
+                }
+            } catch(err) { alert(err.message); }
+        }
+
+        function showDashboard(user) {
+            document.getElementById('authSection').style.display = 'none';
+            document.getElementById('dashboard').style.display = 'block';
+            document.getElementById('userEmail').innerText = user.email;
+
+            db.collection('affiliates').doc(user.uid).onSnapshot(doc => {
+                const data = doc.data();
+                if(data) {
+                    document.getElementById('statClicks').innerText = data.clicks || 0;
+                    document.getElementById('statUsers').innerText = data.totalUsers || 0;
+                    document.getElementById('statComm').innerText = "$" + (data.totalCommission || 0).toFixed(2);
+                    document.getElementById('statDepAmt').innerText = "PKR " + (data.totalDepositsPKR || 0);
+                    document.getElementById('refIDDisplay').innerText = data.refID;
+                }
+            });
+        }
+
+        function generateLink() {
+            document.getElementById('linkBox').classList.remove('hidden');
+            document.getElementById('genBtn').classList.add('hidden');
+            document.getElementById('copyBtn').classList.remove('hidden');
+        }
+
+        function copyLink() {
+            const link = document.getElementById('linkBox').innerText;
+            navigator.clipboard.writeText(link.trim());
+            alert("Referral Link Copied!");
+        }
+
+        function showModal(id) { document.getElementById(id).style.display = 'flex'; }
+        function hideModal(id) { document.getElementById(id).style.display = 'none'; }
+    </script>
 </body>
 </html>
