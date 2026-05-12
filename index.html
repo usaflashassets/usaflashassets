@@ -10,15 +10,15 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
-        body { background: #05070a; color: #e2e8f0; font-family: 'Plus Jakarta Sans', sans-serif; margin: 0; min-height: 100vh; }
+        body { background: #05070a; color: #e2e8f0; font-family: 'Plus Jakarta Sans', sans-serif; margin: 0; }
         .glass-card { background: rgba(17, 24, 39, 0.8); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.05); }
         .stat-box { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.08); border-radius: 20px; padding: 15px; text-align: center; }
         .auth-input { background: #1a1f29; border: 1px solid #2d3748; padding: 14px; border-radius: 12px; width: 100%; color: white; outline: none; }
         .list-item { background: rgba(255,255,255,0.02); border-bottom: 1px solid rgba(255,255,255,0.05); padding: 12px; display: flex; justify-content: space-between; font-size: 11px; }
-        #loader { position: fixed; inset: 0; background: #05070a; z-index: 9999; display: flex; items-center; justify-content: center; }
+        #loader { position: fixed; inset: 0; background: #05070a; z-index: 9999; display: flex; align-items: center; justify-content: center; }
     </style>
 </head>
-<body>
+<body class="min-h-screen">
 
     <div id="loader">
         <div class="w-8 h-8 border-2 border-yellow-500 border-t-transparent rounded-full animate-spin"></div>
@@ -26,18 +26,18 @@
 
     <div id="authBox" class="min-h-screen flex items-center justify-center p-4 hidden">
         <div class="glass-card w-full max-w-sm p-8 rounded-[32px] text-center">
-            <h1 class="text-3xl font-black mb-2 uppercase italic">Partner</h1>
-            <p class="text-[9px] text-gray-500 font-bold uppercase tracking-[4px] mb-8 text-yellow-500">Dubai Live Trade</p>
+            <h1 class="text-3xl font-black mb-1 uppercase italic">Partner</h1>
+            <p class="text-[9px] text-yellow-500 font-bold uppercase tracking-[4px] mb-8">Affiliate Program</p>
             <input type="email" id="email" placeholder="Email" class="auth-input mb-4">
             <input type="password" id="pass" placeholder="Password" class="auth-input mb-6">
-            <button onclick="authAction('login')" class="w-full py-4 bg-yellow-500 text-black font-black rounded-2xl uppercase mb-3 text-sm">Login Account</button>
+            <button onclick="authAction('login')" class="w-full py-4 bg-yellow-500 text-black font-black rounded-2xl uppercase mb-3 text-sm">Login</button>
             <button onclick="authAction('reg')" class="w-full py-4 border border-white/10 text-white font-black rounded-2xl uppercase text-[10px]">Create Partner Account</button>
         </div>
     </div>
 
     <div id="dashBox" class="hidden p-5 max-w-lg mx-auto">
         <header class="flex justify-between items-center mb-8">
-            <h2 class="font-black italic uppercase text-lg">ProTrade <span class="text-yellow-500">Affiliate</span></h2>
+            <h2 class="font-black italic uppercase text-lg">ProTrade <span class="text-yellow-500">Partner</span></h2>
             <button onclick="auth.signOut().then(()=>location.reload())" class="text-[10px] font-bold text-red-500 uppercase border border-red-500/20 px-3 py-1 rounded-lg">Logout</button>
         </header>
 
@@ -49,11 +49,11 @@
         </div>
 
         <div class="glass-card p-6 rounded-[30px] border-yellow-500/10 mb-6">
-            <h3 class="text-center font-black text-[10px] uppercase mb-4 tracking-widest text-gray-400">Your Affiliate Link</h3>
+            <h3 class="text-center font-black text-[10px] uppercase mb-4 tracking-widest text-gray-400">Share Your Link</h3>
             <div class="bg-black/60 p-4 rounded-xl border border-white/5 mb-4">
-                <p id="finalLink" class="text-yellow-500 font-bold text-[12px] break-all text-center italic">Generating link...</p>
+                <p id="finalLink" class="text-yellow-500 font-bold text-[12px] break-all text-center italic">Fetching Link...</p>
             </div>
-            <button onclick="copyLink()" class="w-full py-4 bg-white text-black font-black rounded-2xl uppercase text-xs shadow-xl active:scale-95 transition-transform">Copy My Link</button>
+            <button onclick="copyLink()" class="w-full py-4 bg-white text-black font-black rounded-2xl uppercase text-xs">Copy Affiliate Link</button>
         </div>
 
         <div class="glass-card rounded-[30px] overflow-hidden">
@@ -61,13 +61,20 @@
                 <h3 class="font-black text-[10px] uppercase tracking-widest">Recent Activity</h3>
             </div>
             <div id="depList" class="min-h-[100px]">
-                <p class="text-center text-gray-600 text-[10px] py-10">No referral data yet</p>
+                <p class="text-center text-gray-600 text-[10px] py-10">No data found</p>
             </div>
         </div>
     </div>
 
     <script>
-        const firebaseConfig = { apiKey: "AIzaSyAySRA1YSpTpmC8WjnKmDhnNMHkEmkeP50", authDomain: "waqas-47f30.firebaseapp.com", projectId: "waqas-47f30", storageBucket: "waqas-47f30.appspot.com", messagingSenderId: "374104279093", appId: "1:374104279093:web:6e1844b60456c700940364" };
+        const firebaseConfig = { 
+            apiKey: "AIzaSyAySRA1YSpTpmC8WjnKmDhnNMHkEmkeP50", 
+            authDomain: "waqas-47f30.firebaseapp.com", 
+            projectId: "waqas-47f30", 
+            storageBucket: "waqas-47f30.appspot.com", 
+            messagingSenderId: "374104279093", 
+            appId: "1:374104279093:web:6e1844b60456c700940364" 
+        };
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth(), db = firebase.firestore();
 
@@ -79,11 +86,10 @@
 
         async function authAction(type) {
             const e = document.getElementById('email').value, p = document.getElementById('pass').value;
-            if(!e || !p) return alert("Please fill all fields");
+            if(!e || !p) return alert("Fill all fields");
             try {
                 if(type === 'reg') {
                     const res = await auth.createUserWithEmailAndPassword(e, p);
-                    // 5 Digit Unique ID for link
                     const sID = Math.random().toString(36).substring(2, 7).toUpperCase();
                     await db.collection('affiliates').doc(res.user.uid).set({
                         email: e, clicks: 0, totalUsers: 0, totalCommission: 0, totalDepositsUSD: 0, refID: sID
@@ -103,13 +109,13 @@
                     document.getElementById('c_users').innerText = d.totalUsers || 0;
                     document.getElementById('c_comm').innerText = "$" + (d.totalCommission || 0).toFixed(2);
                     document.getElementById('c_dep').innerText = "$" + (d.totalDepositsUSD || 0).toFixed(2);
-                    // Fixed Link Logic
-                    document.getElementById('finalLink').innerText = "https://dubailivetrade.online/?ref=" + d.refID;
+                    // Automatic generation of go.html link
+                    document.getElementById('finalLink').innerText = "https://dubailivetrade.online/go.html?ref=" + d.refID;
                 }
             });
 
-            // Commission List Logic
-            db.collection('affiliate_history').where('partnerUid', '==', user.uid).orderBy('time', 'desc').onSnapshot(snap => {
+            // Tracking Deposits/Commissions
+            db.collection('affiliate_history').where('partnerUid', '==', user.uid).orderBy('time', 'desc').limit(10).onSnapshot(snap => {
                 const list = document.getElementById('depList');
                 if(snap.empty) return;
                 list.innerHTML = "";
@@ -118,8 +124,8 @@
                     list.innerHTML += `
                         <div class="list-item">
                             <div>
-                                <p class="text-white font-bold">${h.userEmail.split('@')[0]}...</p>
-                                <p class="text-gray-500 font-bold uppercase" style="font-size:7px">Deposit: $${h.amount}</p>
+                                <p class="text-white font-bold italic">${h.userEmail.split('@')[0]}...</p>
+                                <p class="text-gray-600 uppercase" style="font-size:7px">Deposit: $${h.amount}</p>
                             </div>
                             <div class="text-right">
                                 <p class="text-yellow-500 font-bold">+$${h.commission.toFixed(2)}</p>
@@ -132,8 +138,8 @@
 
         function copyLink() {
             const link = document.getElementById('finalLink').innerText;
-            if(link.includes("Generating")) return;
-            navigator.clipboard.writeText(link).then(() => alert("Link Copied Successfully!"));
+            if(link.includes("Fetching")) return;
+            navigator.clipboard.writeText(link).then(() => alert("Affiliate Link Copied!"));
         }
     </script>
 </body>
