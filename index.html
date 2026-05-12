@@ -16,34 +16,34 @@
 </head>
 <body class="p-4">
     <div id="authBox" class="max-w-sm mx-auto mt-20 glass p-8">
-        <h1 class="text-2xl font-bold text-center mb-6">Partner Login</h1>
+        <h1 class="text-2xl font-bold text-center mb-6 uppercase">Affiliate Login</h1>
         <input type="email" id="email" placeholder="Email" class="w-full p-4 mb-4 bg-gray-900 rounded-xl border border-gray-800">
         <input type="password" id="pass" placeholder="Password" class="w-full p-4 mb-6 bg-gray-900 rounded-xl border border-gray-800">
         <button onclick="authAction('login')" class="w-full py-4 bg-yellow-500 text-black font-bold rounded-xl mb-3">Login</button>
-        <button onclick="authAction('reg')" class="w-full py-2 text-gray-500 text-sm">Create Partner Account</button>
+        <button onclick="authAction('reg')" class="w-full py-2 text-gray-500 text-sm">Join Partner Program</button>
     </div>
 
     <div id="dashBox" class="hidden max-w-lg mx-auto">
         <div class="flex justify-between items-center mb-6">
-            <h2 class="text-xl font-bold">ProTrade <span class="text-yellow-500">Affiliate</span></h2>
-            <button onclick="location.reload()" class="text-xs text-red-500 uppercase">Logout</button>
+            <h2 class="text-xl font-bold italic">ProTrade <span class="text-yellow-500">Partner</span></h2>
+            <button onclick="location.reload()" class="text-xs text-red-500 uppercase font-bold">Logout</button>
         </div>
 
         <div class="grid grid-cols-2 gap-3 mb-6">
-            <div class="stat-card"><p class="text-[10px] text-gray-500">CLICKS</p><h3 id="c_clicks" class="text-xl font-bold">0</h3></div>
-            <div class="stat-card"><p class="text-[10px] text-gray-500">REGISTERS</p><h3 id="c_users" class="text-xl font-bold">0</h3></div>
-            <div class="stat-card border-yellow-500/20"><p class="text-[10px] text-yellow-500">COMMISSION</p><h3 id="c_comm" class="text-xl font-bold text-yellow-500">$0.00</h3></div>
-            <div class="stat-card"><p class="text-[10px] text-gray-500">TOTAL DEPOSITS</p><h3 id="c_dep" class="text-xl font-bold">$0.00</h3></div>
+            <div class="stat-card"><p class="text-[10px] text-gray-500 font-bold">CLICKS</p><h3 id="c_clicks" class="text-xl font-bold">0</h3></div>
+            <div class="stat-card"><p class="text-[10px] text-gray-500 font-bold">REGISTERS</p><h3 id="c_users" class="text-xl font-bold">0</h3></div>
+            <div class="stat-card border-yellow-500/20"><p class="text-[10px] text-yellow-500 font-bold">COMMISSION (40%)</p><h3 id="c_comm" class="text-xl font-bold text-yellow-500">$0.00</h3></div>
+            <div class="stat-card"><p class="text-[10px] text-gray-500 font-bold">TOTAL DEPOSITS</p><h3 id="c_dep" class="text-xl font-bold">$0.00</h3></div>
         </div>
 
         <div class="glass p-6 mb-6">
-            <p class="text-[10px] text-center text-gray-500 mb-2">YOUR UNIQUE LINK</p>
-            <p id="finalLink" class="text-center font-bold text-yellow-500 mb-4 text-xs break-all italic"></p>
-            <button onclick="copyL()" class="w-full py-3 bg-white text-black font-bold rounded-xl text-xs uppercase">Copy Link</button>
+            <p class="text-[10px] text-center text-gray-500 font-bold mb-2">YOUR REFERRAL LINK</p>
+            <p id="finalLink" class="text-center font-bold text-yellow-500 mb-4 text-[10px] break-all italic"></p>
+            <button onclick="copyL()" class="w-full py-3 bg-white text-black font-bold rounded-xl text-xs uppercase shadow-lg">Copy Link</button>
         </div>
 
         <div class="glass overflow-hidden">
-            <div class="p-4 border-b border-white/5 bg-white/5"><h3 class="text-xs font-bold">DEPOSIT HISTORY</h3></div>
+            <div class="p-4 border-b border-white/5 bg-white/5"><h3 class="text-xs font-bold uppercase tracking-widest">Deposit History</h3></div>
             <div id="depList" class="p-2 min-h-[100px]"></div>
         </div>
     </div>
@@ -75,18 +75,18 @@
                     document.getElementById('c_dep').innerText = "$" + d.totalDepositsUSD.toFixed(2);
                     document.getElementById('finalLink').innerText = "https://dubailivetrade.online/go.html?ref="+d.refID;
                 });
-                db.collection('affiliate_history').where('partnerUid','==',user.uid).onSnapshot(snap => {
+                db.collection('affiliate_history').where('partnerUid','==',user.uid).orderBy('time', 'desc').onSnapshot(snap => {
                     const list = document.getElementById('depList');
                     list.innerHTML = "";
                     snap.forEach(doc => {
                         const h = doc.data();
-                        list.innerHTML += `<div class="flex justify-between p-3 border-b border-white/5 text-[10px]"><div class="font-bold">${h.userEmail}</div><div class="text-yellow-500">+$${h.commission}</div></div>`;
+                        list.innerHTML += `<div class="flex justify-between p-3 border-b border-white/5 text-[10px]"><div class="font-bold">${h.userEmail}</div><div class="text-yellow-500 font-bold">+$${h.commission.toFixed(2)}</div></div>`;
                     });
                 });
             }
         });
 
-        function copyL() { navigator.clipboard.writeText(document.getElementById('finalLink').innerText); alert("Copied!"); }
+        function copyL() { navigator.clipboard.writeText(document.getElementById('finalLink').innerText); alert("Referral Link Copied!"); }
     </script>
 </body>
 </html>
