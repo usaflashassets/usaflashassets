@@ -3,48 +3,59 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Partner Dashboard</title>
+    <title>Partner Portal | Dubai Live Trade</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
-    <style>
-        body { background: #05070a; color: #e2e8f0; font-family: sans-serif; }
-        .glass { background: rgba(17, 24, 39, 0.8); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.05); border-radius: 24px; }
-        .stat-card { background: rgba(255,255,255,0.02); padding: 15px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.05); text-align: center; }
-    </style>
 </head>
-<body class="p-4">
-    <div id="authBox" class="max-w-sm mx-auto mt-20 glass p-8">
-        <h1 class="text-2xl font-bold text-center mb-6 uppercase">Affiliate Login</h1>
-        <input type="email" id="email" placeholder="Email" class="w-full p-4 mb-4 bg-gray-900 rounded-xl border border-gray-800">
-        <input type="password" id="pass" placeholder="Password" class="w-full p-4 mb-6 bg-gray-900 rounded-xl border border-gray-800">
-        <button onclick="authAction('login')" class="w-full py-4 bg-yellow-500 text-black font-bold rounded-xl mb-3">Login</button>
-        <button onclick="authAction('reg')" class="w-full py-2 text-gray-500 text-sm">Join Partner Program</button>
+<body class="bg-[#05070a] text-white p-4 font-sans">
+    
+    <div id="authBox" class="max-w-sm mx-auto mt-20 bg-[#111827] p-8 rounded-[32px] border border-white/5">
+        <h1 class="text-2xl font-black text-center mb-6 text-yellow-500 italic">PARTNER LOGIN</h1>
+        <input type="email" id="affEmail" placeholder="Email" class="w-full p-4 mb-4 bg-gray-900 rounded-xl border border-gray-800 outline-none text-sm">
+        <input type="password" id="affPass" placeholder="Password" class="w-full p-4 mb-6 bg-gray-900 rounded-xl border border-gray-800 outline-none text-sm">
+        <button onclick="affLogin()" class="w-full py-4 bg-yellow-500 text-black font-black rounded-xl hover:bg-yellow-400 transition">SIGN IN</button>
+        <p class="text-center mt-4 text-[10px] text-gray-500 uppercase">Dubai Live Trade Affiliate Program</p>
     </div>
 
     <div id="dashBox" class="hidden max-w-lg mx-auto">
-        <div class="flex justify-between items-center mb-6">
-            <h2 class="text-xl font-bold italic">ProTrade <span class="text-yellow-500">Partner</span></h2>
-            <button onclick="location.reload()" class="text-xs text-red-500 uppercase font-bold">Logout</button>
+        <div class="flex justify-between items-center mb-8">
+            <h2 class="text-xl font-black italic text-yellow-500">PARTNER PANEL</h2>
+            <button onclick="auth.signOut().then(()=>location.reload())" class="text-[10px] bg-red-500/10 text-red-500 px-3 py-1 rounded-lg font-bold">LOGOUT</button>
         </div>
 
-        <div class="grid grid-cols-2 gap-3 mb-6">
-            <div class="stat-card"><p class="text-[10px] text-gray-500 font-bold">CLICKS</p><h3 id="c_clicks" class="text-xl font-bold">0</h3></div>
-            <div class="stat-card"><p class="text-[10px] text-gray-500 font-bold">REGISTERS</p><h3 id="c_users" class="text-xl font-bold">0</h3></div>
-            <div class="stat-card border-yellow-500/20"><p class="text-[10px] text-yellow-500 font-bold">COMMISSION (40%)</p><h3 id="c_comm" class="text-xl font-bold text-yellow-500">$0.00</h3></div>
-            <div class="stat-card"><p class="text-[10px] text-gray-500 font-bold">TOTAL DEPOSITS</p><h3 id="c_dep" class="text-xl font-bold">$0.00</h3></div>
+        <div class="grid grid-cols-2 gap-4 mb-6">
+            <div class="bg-gray-900 p-5 rounded-2xl border border-white/5 text-center">
+                <p class="text-[9px] text-gray-500 font-bold uppercase mb-1">Total Clicks</p>
+                <h2 id="c_clicks" class="text-2xl font-black">0</h2>
+            </div>
+            <div class="bg-gray-900 p-5 rounded-2xl border border-white/5 text-center">
+                <p class="text-[9px] text-gray-500 font-bold uppercase mb-1">Total Registers</p>
+                <h2 id="c_users" class="text-2xl font-black">0</h2>
+            </div>
         </div>
 
-        <div class="glass p-6 mb-6">
-            <p class="text-[10px] text-center text-gray-500 font-bold mb-2">YOUR REFERRAL LINK</p>
-            <p id="finalLink" class="text-center font-bold text-yellow-500 mb-4 text-[10px] break-all italic"></p>
-            <button onclick="copyL()" class="w-full py-3 bg-white text-black font-bold rounded-xl text-xs uppercase shadow-lg">Copy Link</button>
+        <div class="bg-gradient-to-br from-yellow-500 to-yellow-600 text-black p-6 rounded-[28px] mb-8 shadow-xl shadow-yellow-500/10">
+            <p class="text-[10px] font-black uppercase opacity-60">Available Commission (40%)</p>
+            <h1 id="c_comm" class="text-4xl font-black mt-1">$0.00</h1>
         </div>
 
-        <div class="glass overflow-hidden">
-            <div class="p-4 border-b border-white/5 bg-white/5"><h3 class="text-xs font-bold uppercase tracking-widest">Deposit History</h3></div>
-            <div id="depList" class="p-2 min-h-[100px]"></div>
+        <div class="bg-gray-900 p-6 rounded-[28px] border border-white/5 mb-8">
+            <p class="text-[10px] text-gray-500 font-bold uppercase mb-3 text-center">Your Unique Referral Link</p>
+            <div class="bg-black/50 p-3 rounded-xl border border-white/5 mb-4">
+                <p id="refLink" class="text-[10px] text-yellow-500 truncate text-center italic font-bold">Generating...</p>
+            </div>
+            <button onclick="copyRef()" class="w-full py-3 bg-white text-black font-black rounded-xl text-xs uppercase tracking-widest">Copy Link</button>
+        </div>
+
+        <div class="bg-gray-900 rounded-[28px] border border-white/5 overflow-hidden">
+            <div class="p-4 border-b border-white/5 bg-white/5">
+                <h3 class="text-[10px] font-black uppercase tracking-widest">Recent Conversions</h3>
+            </div>
+            <div id="historyList" class="p-2 min-h-[100px]">
+                <p class="text-center text-gray-600 text-[10px] py-8 font-bold uppercase">No data available</p>
+            </div>
         </div>
     </div>
 
@@ -53,40 +64,52 @@
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth(), db = firebase.firestore();
 
-        function authAction(type) {
-            const e = document.getElementById('email').value, p = document.getElementById('pass').value;
-            if(type==='reg') {
-                auth.createUserWithEmailAndPassword(e,p).then(res => {
-                    const sID = Math.random().toString(36).substring(2, 7).toUpperCase();
-                    db.collection('affiliates').doc(res.user.uid).set({ email:e, clicks:0, totalUsers:0, totalCommission:0, totalDepositsUSD:0, refID:sID });
-                });
-            } else { auth.signInWithEmailAndPassword(e,p); }
+        function affLogin() {
+            const e = document.getElementById('affEmail').value;
+            const p = document.getElementById('affPass').value;
+            if(!e || !p) return alert("Enter details");
+            auth.signInWithEmailAndPassword(e, p).catch(err => alert(err.message));
         }
 
         auth.onAuthStateChanged(user => {
             if(user) {
-                document.getElementById('authBox').style.display='none';
-                document.getElementById('dashBox').style.display='block';
+                document.getElementById('authBox').classList.add('hidden');
+                document.getElementById('dashBox').classList.remove('hidden');
+                
+                // Real-time Dashboard Update
                 db.collection('affiliates').doc(user.uid).onSnapshot(doc => {
                     const d = doc.data();
-                    document.getElementById('c_clicks').innerText = d.clicks;
-                    document.getElementById('c_users').innerText = d.totalUsers;
-                    document.getElementById('c_comm').innerText = "$" + d.totalCommission.toFixed(2);
-                    document.getElementById('c_dep').innerText = "$" + d.totalDepositsUSD.toFixed(2);
-                    document.getElementById('finalLink').innerText = "https://dubailivetrade.online/go.html?ref="+d.refID;
+                    if(d) {
+                        document.getElementById('c_clicks').innerText = d.clicks || 0;
+                        document.getElementById('c_users').innerText = d.totalUsers || 0;
+                        document.getElementById('c_comm').innerText = "$" + (d.totalCommission || 0).toFixed(2);
+                        // Yahan main website ka domain likhein
+                        document.getElementById('refLink').innerText = "https://dubailivetrade.online/go.html?ref=" + d.refID;
+                    }
                 });
-                db.collection('affiliate_history').where('partnerUid','==',user.uid).orderBy('time', 'desc').onSnapshot(snap => {
-                    const list = document.getElementById('depList');
+
+                // History List
+                db.collection('affiliate_history').where('partnerUid','==',user.uid).orderBy('time','desc').onSnapshot(snap => {
+                    const list = document.getElementById('historyList');
+                    if(snap.empty) return;
                     list.innerHTML = "";
                     snap.forEach(doc => {
                         const h = doc.data();
-                        list.innerHTML += `<div class="flex justify-between p-3 border-b border-white/5 text-[10px]"><div class="font-bold">${h.userEmail}</div><div class="text-yellow-500 font-bold">+$${h.commission.toFixed(2)}</div></div>`;
+                        list.innerHTML += `
+                            <div class="flex justify-between items-center p-3 border-b border-white/5 last:border-0">
+                                <div class="text-[10px] font-bold text-gray-400">${h.userEmail}</div>
+                                <div class="text-[11px] font-black text-green-500">+$${h.commission.toFixed(2)}</div>
+                            </div>`;
                     });
                 });
             }
         });
 
-        function copyL() { navigator.clipboard.writeText(document.getElementById('finalLink').innerText); alert("Referral Link Copied!"); }
+        function copyRef() {
+            const link = document.getElementById('refLink').innerText;
+            navigator.clipboard.writeText(link);
+            alert("Referral Link Copied!");
+        }
     </script>
 </body>
 </html>
