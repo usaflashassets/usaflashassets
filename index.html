@@ -3,65 +3,67 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Affiliate Portal | Dubai Live Trade</title>
+    <title>Dubai Live Trade | Partner Portal</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
-        body { background: #05070a; color: #e2e8f0; font-family: 'Plus Jakarta Sans', sans-serif; margin: 0; }
+        body { background: #05070a; color: #e2e8f0; font-family: 'Plus Jakarta Sans', sans-serif; margin: 0; overflow-x: hidden; }
         .glass-card { background: rgba(17, 24, 39, 0.8); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.05); }
-        .stat-box { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: 24px; padding: 20px; }
+        .stat-box { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 20px; padding: 15px; }
         .auth-input { background: #1a1f29; border: 1px solid #2d3748; padding: 14px; border-radius: 12px; width: 100%; color: white; outline: none; }
-        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 1000; align-items: center; justify-content: center; padding: 20px; }
+        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 1000; align-items: center; justify-content: center; padding: 20px; }
     </style>
 </head>
 <body>
 
     <div id="loader" class="fixed inset-0 bg-[#05070a] z-[9999] flex items-center justify-center">
-        <div class="w-8 h-8 border-2 border-yellow-500 border-t-transparent rounded-full animate-spin"></div>
+        <div class="w-10 h-10 border-4 border-yellow-500 border-t-transparent rounded-full animate-spin"></div>
     </div>
 
     <div id="authBox" class="min-h-screen flex items-center justify-center p-4 hidden">
         <div class="glass-card w-full max-w-sm p-8 rounded-[32px]">
-            <h1 class="text-2xl font-black text-center mb-8 uppercase italic italic">Partner <span class="text-yellow-500">Login</span></h1>
-            <input type="email" id="email" placeholder="Email" class="auth-input mb-4">
+            <h1 class="text-3xl font-black text-center mb-8 uppercase italic">Partner <span class="text-yellow-500">Portal</span></h1>
+            <input type="email" id="email" placeholder="Email Address" class="auth-input mb-4">
             <input type="password" id="pass" placeholder="Password" class="auth-input mb-6">
-            <button onclick="authAction('login')" class="w-full py-4 bg-yellow-500 text-black font-black rounded-2xl uppercase mb-3 text-sm">Login</button>
-            <button onclick="authAction('reg')" class="w-full py-4 border border-white/10 text-white font-black rounded-2xl uppercase text-xs">Become a Partner</button>
+            <button onclick="authAction('login')" class="w-full py-4 bg-yellow-500 text-black font-black rounded-2xl uppercase mb-3 shadow-lg shadow-yellow-500/20">Login</button>
+            <button onclick="authAction('reg')" class="w-full py-4 border border-white/10 text-white font-black rounded-2xl uppercase text-[10px]">Create Partner Account</button>
         </div>
     </div>
 
-    <div id="dashBox" class="hidden min-h-screen p-6">
-        <header class="flex justify-between items-center mb-8">
-            <h2 class="font-black italic uppercase text-lg tracking-tighter">Dubai Live <span class="text-yellow-500">Trade</span></h2>
-            <div onclick="openProfile()" class="w-10 h-10 bg-yellow-500 rounded-full flex items-center justify-center text-black font-black cursor-pointer">A</div>
+    <div id="dashBox" class="hidden min-h-screen p-5">
+        <header class="flex justify-between items-center mb-10 px-2">
+            <div>
+                <h2 class="font-black italic uppercase text-xl">Dubai Live <span class="text-yellow-500">Trade</span></h2>
+                <p class="text-[8px] text-gray-500 font-bold uppercase tracking-[3px]">Affiliate Center</p>
+            </div>
+            <div onclick="openProfile()" id="userInitial" class="w-12 h-12 bg-yellow-500 rounded-2xl flex items-center justify-center text-black font-black cursor-pointer shadow-lg shadow-yellow-500/20 text-lg">?</div>
         </header>
 
-        <div class="grid grid-cols-2 gap-4 mb-6">
-            <div class="stat-box"><p class="text-[8px] text-gray-500 font-bold uppercase mb-1">Clicks</p><h3 id="c_clicks" class="text-xl font-black">0</h3></div>
-            <div class="stat-box"><p class="text-[8px] text-gray-500 font-bold uppercase mb-1">Users</p><h3 id="c_users" class="text-xl font-black">0</h3></div>
-            <div class="stat-box"><p class="text-[8px] text-yellow-500/50 font-bold uppercase mb-1">Commission (40%)</p><h3 id="c_comm" class="text-xl font-black text-yellow-500">$0.00</h3></div>
-            <div class="stat-box"><p class="text-[8px] text-gray-500 font-bold uppercase mb-1">Total Deposits</p><h3 id="c_dep" class="text-xl font-black text-sm uppercase">PKR 0</h3></div>
+        <div class="grid grid-cols-2 gap-3 mb-6">
+            <div class="stat-box"><p class="text-[9px] text-gray-500 font-bold uppercase mb-1">Total Clicks</p><h3 id="c_clicks" class="text-2xl font-black italic">0</h3></div>
+            <div class="stat-box"><p class="text-[9px] text-gray-500 font-bold uppercase mb-1">Joined Users</p><h3 id="c_users" class="text-2xl font-black italic">0</h3></div>
+            <div class="stat-box border-yellow-500/20"><p class="text-[9px] text-yellow-500 font-bold uppercase mb-1">Earned Commission</p><h3 id="c_comm" class="text-2xl font-black text-yellow-500 italic">$0.00</h3></div>
+            <div class="stat-box"><p class="text-[9px] text-gray-500 font-bold uppercase mb-1">Total Sales (USD)</p><h3 id="c_dep" class="text-2xl font-black italic">$0.00</h3></div>
         </div>
 
-        <div class="glass-card p-8 rounded-[40px] text-center border-yellow-500/10">
-            <h3 class="font-black text-sm mb-4 uppercase">Affiliate Link</h3>
-            <div id="linkDisplay" class="bg-black/40 p-4 rounded-xl border border-white/5 mb-6 hidden">
-                <p id="finalLink" class="text-yellow-500 font-bold text-[10px] break-all"></p>
+        <div class="glass-card p-6 rounded-[30px] border-white/10">
+            <h3 class="font-black text-xs mb-4 uppercase tracking-widest text-center">Your Unique Referral Link</h3>
+            <div class="bg-black/60 p-4 rounded-2xl border border-white/5 mb-4 select-all">
+                <p id="finalLink" class="text-yellow-500 font-bold text-[11px] break-all text-center">Loading link...</p>
             </div>
-            <button id="genBtn" onclick="generateLink()" class="w-full py-4 bg-white text-black font-black rounded-2xl uppercase text-xs">Generate My Link</button>
-            <button id="copyBtn" onclick="copyLink()" class="hidden w-full py-4 bg-blue-600 text-white font-black rounded-2xl uppercase text-xs">Copy Link</button>
+            <button onclick="copyLink()" class="w-full py-4 bg-white text-black font-black rounded-2xl uppercase text-xs tracking-widest active:scale-95 transition-transform">Copy Affiliate Link</button>
         </div>
     </div>
 
     <div id="profileM" class="modal">
-        <div class="glass-card p-8 rounded-[35px] w-full max-w-xs text-center relative">
-            <button onclick="closeProfile()" class="absolute top-5 right-5 text-gray-500 text-xl">&times;</button>
-            <div class="w-16 h-16 bg-yellow-500 rounded-full mx-auto flex items-center justify-center text-2xl font-black text-black mb-4">A</div>
-            <p id="userEmail" class="text-white font-bold text-xs mb-8">...</p>
-            <button onclick="auth.signOut().then(()=>location.reload())" class="w-full py-4 bg-red-600 text-white font-black rounded-2xl uppercase text-[10px]">Logout</button>
+        <div class="glass-card p-8 rounded-[40px] w-full max-w-xs text-center relative border-white/10">
+            <button onclick="closeProfile()" class="absolute top-6 right-6 text-gray-500 text-2xl font-light">&times;</button>
+            <div id="modalInitial" class="w-20 h-20 bg-yellow-500 rounded-3xl mx-auto flex items-center justify-center text-3xl font-black text-black mb-4 shadow-xl shadow-yellow-500/20">?</div>
+            <p id="userEmail" class="text-white font-bold italic text-sm mb-10 tracking-tight">...</p>
+            <button onclick="auth.signOut().then(()=>location.reload())" class="w-full py-4 bg-gradient-to-r from-red-600 to-red-800 text-white font-black rounded-2xl uppercase text-[11px] shadow-lg shadow-red-900/20">Logout Partner</button>
         </div>
     </div>
 
@@ -82,14 +84,14 @@
 
         async function authAction(type) {
             const e = document.getElementById('email').value, p = document.getElementById('pass').value;
-            if(!e || !p) return alert("Fill all fields");
+            if(!e || !p) return alert("Please fill all fields");
             try {
                 if(type === 'reg') {
                     const res = await auth.createUserWithEmailAndPassword(e, p);
-                    // 5 Digit Short ID Generation
+                    // 5 Digit Short ID
                     const shortID = Math.random().toString(36).substring(2, 7).toUpperCase();
                     await db.collection('affiliates').doc(res.user.uid).set({
-                        email: e, clicks: 0, totalUsers: 0, totalCommission: 0, totalDepositsPKR: 0, refID: shortID
+                        email: e, clicks: 0, totalUsers: 0, totalCommission: 0, totalDepositsUSD: 0, refID: shortID
                     });
                 } else { await auth.signInWithEmailAndPassword(e, p); }
             } catch(err) { alert(err.message); }
@@ -99,6 +101,8 @@
             document.getElementById('authBox').classList.add('hidden');
             document.getElementById('dashBox').classList.remove('hidden');
             document.getElementById('userEmail').innerText = user.email;
+            document.getElementById('userInitial').innerText = user.email[0].toUpperCase();
+            document.getElementById('modalInitial').innerText = user.email[0].toUpperCase();
 
             db.collection('affiliates').doc(user.uid).onSnapshot(doc => {
                 const d = doc.data();
@@ -106,23 +110,19 @@
                     document.getElementById('c_clicks').innerText = d.clicks || 0;
                     document.getElementById('c_users').innerText = d.totalUsers || 0;
                     document.getElementById('c_comm').innerText = "$" + (d.totalCommission || 0).toFixed(2);
-                    document.getElementById('c_dep').innerText = "PKR " + (d.totalDepositsPKR || 0);
-                    // Set Link
+                    document.getElementById('c_dep').innerText = "$" + (d.totalDepositsUSD || 0).toFixed(2);
+                    // Automatic Link Generation
                     document.getElementById('finalLink').innerText = "https://dubailivetrade.online/?ref=" + d.refID;
                 }
             });
         }
 
-        function generateLink() {
-            document.getElementById('linkDisplay').classList.remove('hidden');
-            document.getElementById('genBtn').classList.add('hidden');
-            document.getElementById('copyBtn').classList.remove('hidden');
-        }
-
         function copyLink() {
             const link = document.getElementById('finalLink').innerText;
-            navigator.clipboard.writeText(link);
-            alert("Link Copied!");
+            if(link.includes("Loading")) return;
+            navigator.clipboard.writeText(link).then(() => {
+                alert("Success! Affiliate Link Copied.");
+            });
         }
 
         function openProfile() { document.getElementById('profileM').style.display = 'flex'; }
